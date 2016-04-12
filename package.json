@@ -1,0 +1,13 @@
+{
+  "name": "Snake",
+  "version": "1.0.0",
+  "description": "Snake Multijoueur",
+  "main": "src/server/server.js",
+  "author": "Labodudev",
+  "scripts": {
+    "start": "node src/server/server.js"
+  },
+  "dependencies": {
+    "socket.io": "1.4.5"
+  }
+}

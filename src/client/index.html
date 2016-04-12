@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Snake Multijoueur</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <div id="gameAreaWrapper">
+      <div id="status"><span class="title">Classement</span></div>
+      <div id="chatbox" class="chatbox">
+        <ul id="chatList" class="chat-list"></ul>
+        <input id="chatInput" type="text" placeholder="Message ici..." maxlength="35" class="chat-input">
+      </div>
+      <canvas id="csv" tabindex="1"></canvas>
+    </div>
+    <div id="startMenuWrapper">
+      <div id="startMenu">
+        <p>Snake Multijoueur</p>
+        <input id="playerNameInput" type="text" tabindex="0" autofocus="" placeholder="Entrez votre nom ici" maxlength="25"><b class="input-error">Le nom peut seulement contenir des caractères alphanumérique.</b><br><a>
+          <button id="startButton">Jouer</button></a>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/socket.io.js"></script>
+    <script type="text/javascript" src="js/tchat.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/socket.js"></script>
+  </body>
+</html>
