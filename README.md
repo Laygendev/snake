@@ -1,4 +1,4 @@
-# fortressjs-socketio-snake
+# snake
 A demo realtime snake with  FortressJS + Socket.IO
 
 Join us on Slack : https://fortressjs.slack.com
@@ -10,8 +10,8 @@ Join us on Slack : https://fortressjs.slack.com
 -----------------------------
 
 ```
-$ git clone https://github.com/snake/fortressjs-socketio-snake/
-$ cd fortressjs-socketio-snake
+$ git clone https://github.com/labodudev/fortressjs-socketio-snake/
+$ cd snake
 $ node wf.js
 ```
 

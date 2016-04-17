@@ -23,7 +23,10 @@
     "simple",
     "speed"
   ],
-  "author": "Jimmy THIERRY <jimmy.latour@gmail.com> (http://labodudev.fr)",
+  "dependencies": {
+    "socket.io": "1.4.5"
+  },
+  "author": "Jimmy Latour <jimmy.latour@gmail.com> (http://labodudev.fr)",
   "license": "MIT",
   "homepage": "https://github.com/labodudev/fortressjs-socketio-snake#readme"
 }
