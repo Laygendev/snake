@@ -12,7 +12,7 @@ Join us on Slack : https://fortressjs.slack.com
 -----------------------------
 
 ```
-$ git clone https://github.com/labodudev/fortressjs-socketio-snake/
+$ git clone https://github.com/labodudev/snake/
 $ cd snake
 $ node wf.js
 ```
