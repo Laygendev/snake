@@ -1,6 +1,6 @@
 {
   "name": "Snake",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Snake Multijoueur",
   "main": "src/server/server.js",
   "author": "Labodudev",

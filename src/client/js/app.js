@@ -9,6 +9,7 @@ var xoffset = -gameWidth;
 var yoffset = -gameHeight;
 var directionLock = 0;
 var KEY_ENTER = 13;
+var fps = 60;
 
 function startGame() {
   playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '').substring(0,25);
@@ -65,24 +66,36 @@ window.onload = function() {
   });
 }
 
-window.requestAnimFrame = (function() {
-    return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.msRequestAnimationFrame     ||
-            function( callback ) {
-                window.setTimeout(callback, 1000 / 60);
-            };
-})();
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
 
-window.cancelAnimFrame = (function(handle) {
-    return  window.cancelAnimationFrame     ||
-            window.mozCancelAnimationFrame;
-})();
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
 
 function animLoop() {
-    animLoopHandle = window.requestAnimFrame(animLoop);
+  setTimeout(function() {
+    animLoopHandle = requestAnimationFrame(animLoop);
     gameLoop();
+  }, 1000 / fps);
 }
 
 var c = document.getElementById('csv');
@@ -222,7 +235,7 @@ function drawUsers() {
     graph.strokeStyle = '#003300';
     graph.fillStyle = 'green';
     drawCircle( headX, headY, 10, 20 );
-    
+
     graph.fillStyle = 'red';
     for( var i = 0; i < users[key].listSegment.length; i++ ) {
         x = users[key].listSegment[i].x - start.x;
