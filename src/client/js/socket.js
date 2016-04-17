@@ -30,14 +30,14 @@ function setupSocket() {
     resize();
   });
 
-  socket.on('serverTellPlayerMove', function (userData, visibleFoods) {
+  socket.on('1', function (userData, visibleFoods) {
     userData = JSON.parse(userData);
-    foods = visibleFoods;
+    foods = JSON.parse(visibleFoods);
 
     for (var key in userData) {
       users[key] = userData[key];
 
-      if (users[key].center) {
+      if (users[key].c) {
         var xoffset = player.x - users[key].x;
         var yoffset = player.y - users[key].y;
         player.x = users[key].x;
@@ -48,7 +48,7 @@ function setupSocket() {
     }
   });
 
-  socket.on('leaderboard', function (data) {
+  socket.on('2', function (data) {
     leaderboard = data.leaderboard;
     var status = '<span class="title">Classement</span>';
     for (var i = 0; i < leaderboard.length; i++) {

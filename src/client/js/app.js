@@ -237,9 +237,9 @@ function drawUsers() {
     drawCircle( headX, headY, 10, 20 );
 
     graph.fillStyle = 'red';
-    for( var i = 0; i < users[key].listSegment.length; i++ ) {
-        x = users[key].listSegment[i].x - start.x;
-        y = users[key].listSegment[i].y - start.y;
+    for( var i = 0; i < users[key].l.length; i++ ) {
+        x = users[key].l[i].x - start.x;
+        y = users[key].l[i].y - start.y;
         x = valueInRange(-users[key].x - player.x + screenWidth/2, gameWidth - users[key].x + gameWidth - player.x + screenWidth/2, x);
         y = valueInRange(-users[key].y - player.y + screenHeight/2, gameHeight - users[key].y + gameHeight - player.y + screenHeight/2 , y);
 

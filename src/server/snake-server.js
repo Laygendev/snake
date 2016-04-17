@@ -303,10 +303,10 @@ exports = module.exports = function(server){
     users.forEach( function(u, k) {
       var listUser = users.map( function(f) {
         return {
-          center: f.id === u.id ? true : false,
+          c: f.id === u.id ? true : false,
           x: f.x,
           y: f.y,
-          listSegment: f.listSegment.map( function(s) {
+          l: f.listSegment.map( function(s) {
             if ( f.listPath[s].x > u.x - u.screenWidth/2 - 20 &&
                 f.listPath[s].x < u.x + u.screenWidth/2 + 20 &&
                 f.listPath[s].y > u.y - u.screenHeight/2 - 20 &&
@@ -333,10 +333,12 @@ exports = module.exports = function(server){
 
       listUser = JSON.stringify(listUser);
       listUser = minify(listUser);
+      visibleFoods = JSON.stringify(visibleFoods);
+      visibleFoods = minify(visibleFoods);
 
-      sockets[u.id].emit('serverTellPlayerMove', listUser, visibleFoods);
+      sockets[u.id].emit('1', listUser, visibleFoods);
       if (leaderboardChanged) {
-        sockets[u.id].emit('leaderboard', {
+        sockets[u.id].emit('2', {
           players: users.length,
           leaderboard: leaderboard
         });
