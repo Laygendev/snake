@@ -5,7 +5,6 @@ var c = require('../../config.json');
 
 var server = http.createServer(function(req, res) {
   var page = url.parse(req.url).pathname;
-  console.log( page );
   if(page == '/') {
     fs.readFile('./src/client/index.html', 'utf8', function(err, data) {
       if(err) {

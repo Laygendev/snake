@@ -9,7 +9,7 @@ var xoffset = -gameWidth;
 var yoffset = -gameHeight;
 var directionLock = 0;
 var KEY_ENTER = 13;
-var fps = 60;
+var fps = 30;
 
 function startGame() {
   playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '').substring(0,25);

@@ -1,5 +1,6 @@
 var util = require('./util');
 var c = require('../../config.json');
+var minify = require('jsonminify');
 
 var users = [];
 var foods = [];
@@ -141,6 +142,7 @@ exports = module.exports = function(server){
   function tickPlayer(currentPlayer) {
     if(currentPlayer.lastHeartbeat < new Date().getTime() - c.maxHeartbeatInterval) {
       sockets[currentPlayer.id].emit('kick', 'Last heartbeat received over ' + c.maxHeartbeatInterval + ' ago.');
+      sockets[currentPlayer.id].emit('RIP');
       sockets[currentPlayer.id].disconnect();
     }
     if (currentPlayer != undefined) {
@@ -328,6 +330,9 @@ exports = module.exports = function(server){
           }
         })
         .filter(function(f) { return f; });
+
+      listUser = JSON.stringify(listUser);
+      listUser = minify(listUser);
 
       sockets[u.id].emit('serverTellPlayerMove', listUser, visibleFoods);
       if (leaderboardChanged) {

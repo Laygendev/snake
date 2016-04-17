@@ -31,6 +31,7 @@ function setupSocket() {
   });
 
   socket.on('serverTellPlayerMove', function (userData, visibleFoods) {
+    userData = JSON.parse(userData);
     foods = visibleFoods;
 
     for (var key in userData) {
