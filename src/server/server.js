@@ -7,7 +7,7 @@ var server = http.createServer(function(req, res) {
   var page = url.parse(req.url).pathname;
   console.log( page );
   if(page == '/') {
-    fs.readFile('../client/index.html', 'utf8', function(err, data) {
+    fs.readFile('./src/client/index.html', 'utf8', function(err, data) {
       if(err) {
         return console.log(err);
       }
@@ -21,7 +21,7 @@ var server = http.createServer(function(req, res) {
     /** Lecture de toutes les ressources (js, css) dans le dossier client */
     var pageSplitted = page.split( '.' );
 
-    fs.readFile( '../client/' + page, 'utf-8', function(err, data) {
+    fs.readFile( './src/client/' + page, 'utf-8', function(err, data) {
       if(err) {
         return console.log(err);
       }
