@@ -1,6 +1,7 @@
 # snake
 A demo realtime snake with  FortressJS + Socket.IO
 
+Use FortressJS : https://github.com/seraum/fortressjs
 Join us on Slack : https://fortressjs.slack.com
 
 * Run on Windows, Mac, Linux, Smartphone ...
