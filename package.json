@@ -1,14 +1,29 @@
 {
-  "name": "Snake",
-  "version": "1.1.0",
-  "description": "Snake Multijoueur",
-  "main": "src/server/server.js",
-  "author": "Labodudev",
+  "name": "fortressjs-socketio-snake",
+  "version": "0.0.1",
+  "description": "A simple snake with FortressJS",
+  "main": "wf.js",
   "scripts": {
-    "start": "node src/server/server.js"
+    "test": "node ./script/unit.script.js"
   },
-  "dependencies": {
-    "socket.io": "1.4.5",
-    "jsonminify": "0.2.3"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/labodudev/fortressjs-socketio-snake.git"
+  },
+  "keywords": [
+    "nodejs",
+    "js",
+    "framework",
+    "web",
+    "net",
+    "http",
+    "https",
+    "fast",
+    "secure",
+    "simple",
+    "speed"
+  ],
+  "author": "Jimmy THIERRY <jimmy.latour@gmail.com> (http://labodudev.fr)",
+  "license": "MIT",
+  "homepage": "https://github.com/labodudev/fortressjs-socketio-snake#readme"
 }
