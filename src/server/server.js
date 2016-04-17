@@ -7,7 +7,7 @@ var server = http.createServer(function(req, res) {
   var page = url.parse(req.url).pathname;
   console.log( page );
   if(page == '/') {
-    fs.readFile('./src/client/index.html', 'utf8', function(err, data) {
+    fs.readFile('../client/index.html', 'utf8', function(err, data) {
       if(err) {
         return console.log(err);
       }
@@ -21,7 +21,7 @@ var server = http.createServer(function(req, res) {
     /** Lecture de toutes les ressources (js, css) dans le dossier client */
     var pageSplitted = page.split( '.' );
 
-    fs.readFile( './src/client/' + page, 'utf-8', function(err, data) {
+    fs.readFile( '../client/' + page, 'utf-8', function(err, data) {
       if(err) {
         return console.log(err);
       }
@@ -35,6 +35,6 @@ var server = http.createServer(function(req, res) {
 
 var snakeServer = require('./snake-server')(server);
 
-var ipAddress = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || '127.0.0.1';
+var ipAddress = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || c.ip;
 var serverPort = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || c.port;
 server.listen(serverPort);

@@ -155,8 +155,8 @@ exports = module.exports = function(server){
     var lastX = currentPlayer.listSegment.length == 0 ? currentPlayer.x : currentPlayer.listPath[currentPlayer.listSegment[currentPlayer.listSegment.length - 1]].x;
     var lastY = currentPlayer.listSegment.length == 0 ? currentPlayer.y : currentPlayer.listPath[currentPlayer.listSegment[currentPlayer.listSegment.length - 1]].y;
 
-    for(var i = currentPlayer.listSegment.length * 20; i < (currentPlayer.number * 20) + 1; i++) {
-      if( i % 20 == 0 && i != currentPlayer.listSegment.length * 20 )
+    for(var i = currentPlayer.listSegment.length * (20 / c.speed); i < (currentPlayer.number * (20 / c.speed)) + 1; i++) {
+      if( i % (20 / c.speed) == 0 && i != currentPlayer.listSegment.length * (20 / c.speed) )
         currentPlayer.listSegment.push(i);
 
       currentPlayer.listPath[i] = { x: lastX, y: lastY };
@@ -174,8 +174,8 @@ exports = module.exports = function(server){
 
     var borderCalc = c.radius / 3;
 
-    currentPlayer.x += 1 * Math.cos(currentPlayer.angle * Math.PI / 180);
-    currentPlayer.y += 1 * Math.sin(currentPlayer.angle * Math.PI / 180);
+    currentPlayer.x += c.speed * Math.cos(currentPlayer.angle * Math.PI / 180);
+    currentPlayer.y += c.speed * Math.sin(currentPlayer.angle * Math.PI / 180);
 
     if (currentPlayer.x > c.gameWidth - borderCalc) {
         currentPlayer.x =  borderCalc;
