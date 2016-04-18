@@ -3,7 +3,7 @@ var sioConf=
 		"state": true,
 		"type": "socketio",
 		"name": "socketio webserver",
-		"port": {"http": 3001 },
+		"port": {"http": 3000 },
 		"thread": 1,//os.cpus().length,
 		"engine":
 		{

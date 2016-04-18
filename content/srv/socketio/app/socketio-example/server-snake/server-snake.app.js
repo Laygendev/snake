@@ -76,7 +76,7 @@ function serverSnake()
 
 					listUser = JSON.stringify(listUser);
 
-					self.socket.SERVER.CLIENTS[i].emit('6', listUser);
+					// self.socket.SERVER.CLIENTS[i].emit('6', listUser);
 				}
 			}
 		}

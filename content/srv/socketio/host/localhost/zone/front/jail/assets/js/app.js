@@ -128,7 +128,7 @@ function gameLoop() {
   drawUsers();
 
   if (gameStart) {
-    socket.emit('5', player.d);
+    // socket.emit('5', player.d);
   }
 }
 
@@ -143,11 +143,13 @@ function movePlayer() {
   player.x += player.s * Math.cos(player.a * Math.PI / 180);
   player.y += player.s * Math.sin(player.a * Math.PI / 180);
 
-	if (player.lp.length > 0) {
-    var part = player.lp.pop();
-    part.x = player.x;
-    part.y = player.y,
-    player.lp.unshift(part);
+  if (player.lp != undefined) {
+  	if (player.lp.length > 0) {
+      var part = player.lp.pop();
+      part.x = player.x;
+      part.y = player.y,
+      player.lp.unshift(part);
+    }
   }
 
   users[player.i] = player;
@@ -237,7 +239,6 @@ function drawFoods() {
 }
 
 function drawUsers() {
-console.log(users);
   for (var key in users) {
     drawUser(users[key]);
   }
@@ -266,13 +267,15 @@ function drawUser(user) {
   drawCircle( headX, headY, 10, 20 );
 
   graph.fillStyle = 'red';
-  for( var i = 0; i < user.ls.length; i++ ) {
-      x = user.ls[i].x - start.x;
-      y = user.ls[i].y - start.y;
-      x = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, x);
-      y = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , y);
+  if (user.ls != undefined) {
+    for (var i = 0; i < user.ls.length; i++) {
+        x = user.ls[i].x - start.x;
+        y = user.ls[i].y - start.y;
+        x = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, x);
+        y = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , y);
 
-      drawCircle(x, y, 10, 20 );
+        drawCircle(x, y, 10, 20);
+    }
   }
 }
 
