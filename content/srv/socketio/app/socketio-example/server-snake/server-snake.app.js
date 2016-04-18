@@ -18,7 +18,10 @@ function serverSnake()
 	{
 		self.socket = socket;
 
-		self.currentPlayer = { i: socket.id, l: new Date().getTime(), x: 50, y: 50, s: wf.CONF['SNAKE_CONF'].speed, a: 0, sa: wf.CONF['SNAKE_CONF'].speedAngle, d: 0, ls:[], lp: [], n: 0, w: 0, h: 0 };
+		self.currentPlayer = { i: socket.id, l: new Date().getTime(), s: wf.CONF['SNAKE_CONF'].speed, a: 0, sa: wf.CONF['SNAKE_CONF'].speedAngle, d: 0, ls:[], lp: [], n: 0, w: 0, h: 0 };
+		self.currentPlayer.x = Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameWidth - 20 - 20)) + 20;
+		self.currentPlayer.y = Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameHeight - 20 - 20)) + 20;
+
 		socket.on('error', this.error);
 		socket.on('0', self.respawn);
 		socket.on('2', self.gotit);

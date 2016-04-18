@@ -32,11 +32,8 @@ function food()
       };
 
       self.foods.push({
-        // Make IDs unique.
-        i: ((new Date()).getTime() + '' + self.foods.length) >>> 0,
         x: position.x,
         y: position.y,
-        r: 10
       });
 
       self.foodToAdd--;
