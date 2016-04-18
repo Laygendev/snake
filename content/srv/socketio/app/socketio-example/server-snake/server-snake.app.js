@@ -17,6 +17,7 @@ function serverSnake()
 	this.code = function(socket)
 	{
 		self.socket = socket;
+
 		self.currentPlayer = { i: socket.id, l: new Date().getTime(), x: 50, y: 50, s: wf.CONF['SNAKE_CONF'].speed, a: 0, sa: wf.CONF['SNAKE_CONF'].speedAngle, d: 0, ls:[], lp: [], n: 0, w: 0, h: 0 };
 		socket.on('error', this.error);
 		socket.on('0', self.respawn);
@@ -39,11 +40,11 @@ function serverSnake()
 		self.currentPlayer = player;
 		self.currentPlayer.l = new Date().getTime(); // lastHeartBeat
 
-		self.socket.SERVER.APPS['socketio-example'][2].exec.generatePath(self.currentPlayer);
+		if (self.socket.SERVER.engineArray[1].exec.LoadAppByName('snake') != undefined)
+			self.socket.SERVER.engineArray[1].exec.LoadAppByName('snake').exec.generatePath(self.currentPlayer);
 
 		self.socket.SERVER.CLIENTS[self.currentPlayer.i].player = self.currentPlayer;
 		self.socket.IO[0].emit('3', { n: self.currentPlayer.name });
-		console.log( self.currentPlayer );
 
 		var gameSetup = { w: wf.CONF['SNAKE_CONF'].gameWidth, h: wf.CONF['SNAKE_CONF'].gameHeight, s: wf.CONF['SNAKE_CONF'].speed, sa: wf.CONF['SNAKE_CONF'].speedAngle };
 		gameSetup = JSON.stringify(gameSetup);
@@ -76,7 +77,7 @@ function serverSnake()
 					}
 
 					// foods
-					var listFoods = self.socket.SERVER.APPS['socketio-example'][0].exec.getFoods();
+					var listFoods = self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ? self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.getFoods() : [];
 					var visibleFoods = [];
 					if( self.socket.SERVER.CLIENTS[i].player != undefined ) {
 						for (var y in listFoods) {

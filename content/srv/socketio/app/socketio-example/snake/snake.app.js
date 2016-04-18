@@ -74,8 +74,8 @@ function snake()
 	}
 
 	this.gameLoop = function() {
-		if( self.socket != undefined ) {
-			self.socket.SERVER.APPS['socketio-example'][0].exec.gameLoop();
+		if( self.socket != undefined && self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ) {
+			self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.gameLoop();
 		}
 	}
 }

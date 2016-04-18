@@ -8,6 +8,7 @@ var sioConf=
 		"engine":
 		{
 		  "socketio-start": {at: "start"},
+		  "app-load": {at: "start"},
 		  "http-start": {at: "start"},
 		  "http-data": {at: "start"},
 		  "http-zone": {at: "start"},
