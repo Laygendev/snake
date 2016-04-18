@@ -66,40 +66,38 @@ window.onload = function() {
     }
   });
 }
-//
-// (function() {
-//   var lastTime = 0;
-//   var vendors = ['ms', 'moz', 'webkit', 'o'];
-//   for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-//     window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-//     window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-//                                  || window[vendors[x]+'CancelRequestAnimationFrame'];
-//   }
-//
-//   if (!window.requestAnimationFrame)
-//     window.requestAnimationFrame = function(callback, element) {
-//       var currTime = new Date().getTime();
-//       var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-//       var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-//         timeToCall);
-//       lastTime = currTime + timeToCall;
-//       return id;
-//     };
-//
-//   if (!window.cancelAnimationFrame)
-//     window.cancelAnimationFrame = function(id) {
-//       clearTimeout(id);
-//     };
-// }());
-//
-function animLoop() {
-//   setTimeout(function() {
-//     animLoopHandle = requestAnimationFrame(animLoop);
-    gameLoop();
-  // }, 1000 / fps);
-}
 
-setInterval(animLoop, 1000 / fps);
+(function() {
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                 || window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
+
+  if (!window.requestAnimationFrame)
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+        timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
+
+  if (!window.cancelAnimationFrame)
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
+}());
+
+function animLoop() {
+  setTimeout(function() {
+    animLoopHandle = requestAnimationFrame(animLoop);
+    gameLoop();
+  }, 1000 / fps);
+}
 
 var c = document.getElementById('csv');
 c.width = screenWidth;
@@ -122,45 +120,50 @@ function gameLoop() {
   graph.fillStyle = '#f2fbff';
   graph.fillRect(0, 0, screenWidth, screenHeight);
 
-  movePlayer();
-
-  drawGrid();
-  drawBorder();
-  drawFoods();
-  drawUsers();
 
   if (gameStart) {
-    socket.emit('5', player.d);
+    drawGrid();
+    drawBorder();
+    drawFoods();
+    drawUsers();
+
+    movePlayer();
+    var playerSynchro = {
+      d: player.d,
+      x: player.x,
+      y: player.y
+    };
+    socket.emit('5', playerSynchro);
   }
 }
 
 function movePlayer() {
-  var lastX = player.x;
-  var lastY = player.y;
-
+  // var lastX = player.x;
+  // var lastY = player.y;
+  //
   if (player.d == KEY_LEFT) {
     player.a -= player.sa;
   }
   if (player.d == KEY_RIGHT) {
     player.a += player.sa;
   }
-
+  //
   player.x += player.s * Math.cos(player.a * Math.PI / 180);
   player.y += player.s * Math.sin(player.a * Math.PI / 180);
+  //
+  // if (player.lp != undefined) {
+  // 	if (player.lp.length > 0) {
+  //     var part = player.lp.pop();
+  //     part.x = player.x;
+  //     part.y = player.y,
+  //     player.lp.unshift(part);
+  //   }
+  // }
 
-  if (player.lp != undefined) {
-  	if (player.lp.length > 0) {
-      var part = player.lp.pop();
-      part.x = player.x;
-      part.y = player.y,
-      player.lp.unshift(part);
-    }
-  }
-
-  var xoffset = lastX - player.x;
-  var yoffset = lastY - player.y;
-  player.xoffset = isNaN(xoffset) ? 0 : xoffset;
-  player.yoffset = isNaN(yoffset) ? 0 : yoffset;
+  // var xoffset = lastX - player.x;
+  // var yoffset = lastY - player.y;
+  // player.xoffset = isNaN(xoffset) ? 0 : xoffset;
+  // player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 
   users[player.i] = player;
 }
@@ -249,12 +252,15 @@ function drawFoods() {
 }
 
 function drawUsers() {
+  info();
   for (var key in users) {
-    drawUser(key, users[key]);
+    drawUser(users[key]);
   }
+
+  // users = [];
 }
 
-function drawUser(key, user) {
+function drawUser(user) {
   var start = {
     x: player.x - (screenWidth / 2),
     y: player.y - (screenHeight / 2)
@@ -270,10 +276,9 @@ function drawUser(key, user) {
 
   headX = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, headX);
   headY = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , headY);
-
   graph.lineWidth = 2;
   graph.strokeStyle = '#003300';
-  graph.fillStyle = key == 0 ? 'red' : 'green';
+  graph.fillStyle = 'green';
   drawCircle( headX, headY, 10, 20 );
 
   graph.fillStyle = 'red';
@@ -288,6 +293,18 @@ function drawUser(key, user) {
     }
   }
 }
+
+function info() {
+  graph.fillStyle = 'black';
+  graph.font = "15px Arial";
+
+  var i = 1;
+  for(var key in users) {
+    graph.fillText("_id : " + users[key].i + "X : " + parseInt(users[key].x) + ' Y : ' + parseInt(users[key].y), 10, (20 * i));
+    i++;
+  }
+}
+
 
 function valueInRange(min, max, value) {
   return Math.min(max, Math.max(min, value));

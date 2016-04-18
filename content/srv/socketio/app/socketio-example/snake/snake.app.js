@@ -65,8 +65,6 @@ function snake()
     player.x += wf.CONF['SNAKE_CONF'].speed * Math.cos(player.a * Math.PI / 180);
     player.y += wf.CONF['SNAKE_CONF'].speed * Math.sin(player.a * Math.PI / 180);
 
-		console.log( player.x );
-
 		if (player.lp.length > 0) {
 	    var part = player.lp.pop();
 	    part.x = player.x;
@@ -82,5 +80,5 @@ function snake()
 	}
 }
 
-setInterval(module.exports.snake.moveLoop, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+// setInterval(module.exports.snake.moveLoop, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
 setInterval(module.exports.snake.gameLoop, 1000);

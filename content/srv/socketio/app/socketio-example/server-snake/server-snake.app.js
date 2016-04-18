@@ -17,54 +17,59 @@ function serverSnake()
 	this.code = function(socket)
 	{
 		self.socket = socket;
+		self.socket.SERVER.CLIENTS[socket.id].player = {
+			i:socket.id,
+			s: wf.CONF['SNAKE_CONF'].speed,
+			a: 0,
+			sa: wf.CONF['SNAKE_CONF'].speedAngle,
+			d: 0,
+			ls:[],
+			lp: [],
+			n: 0,
+			w: 0,
+			h: 0
+		};
+		self.socket.SERVER.CLIENTS[socket.id].player.x = Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameWidth - 20 - 20)) + 20;
+		self.socket.SERVER.CLIENTS[socket.id].player.y = Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameHeight - 20 - 20)) + 20;
 
-		self.currentPlayer = { i: socket.id, l: new Date().getTime(), s: wf.CONF['SNAKE_CONF'].speed, a: 0, sa: wf.CONF['SNAKE_CONF'].speedAngle, d: 0, ls:[], lp: [], n: 0, w: 0, h: 0 };
-		self.currentPlayer.x = Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameWidth - 20 - 20)) + 20;
-		self.currentPlayer.y = Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameHeight - 20 - 20)) + 20;
-
-		socket.on('error', this.error);
-		socket.on('0', self.respawn);
-		socket.on('2', self.gotit);
-		socket.on('5', self.updatePlayer);
-		socket.on('r', self.resize);
+		socket.on('error', self.error);
+		socket.on('0', self.respawn.bind(this, socket));
+		socket.on('2', function(player) { self.gotit(socket, player); });
+		socket.on('5', function(d) { self.updatePlayer(socket, d); });
+		socket.on('r', function(d) { self.resize(socket, d); });
 	}
 
 	this.error = function(obj) {
 		console.log(obj);
 	}
 
-	this.respawn = function() {
+	this.respawn = function(socket) {
 		console.log('[INFO] User respawned!');
-		self.currentPlayer = JSON.stringify(self.currentPlayer);
-		self.socket.emit('1', self.currentPlayer);
+		socket.emit('1', JSON.stringify(socket.SERVER.CLIENTS[socket.id].player));
 	}
 
-	this.gotit = function(player) {
+	this.gotit = function(socket, player) {
 		console.log('[INFO] Player ' + player.name + ' connecting!');
-		self.currentPlayer = player;
-		self.currentPlayer.l = new Date().getTime(); // lastHeartBeat
+		socket.SERVER.CLIENTS[socket.id].player = player;
 
-		if (self.socket.SERVER.engineArray[1].exec.LoadAppByName('snake') != undefined)
-			self.socket.SERVER.engineArray[1].exec.LoadAppByName('snake').exec.generatePath(self.currentPlayer);
+		if (socket.SERVER.engineArray[1].exec.LoadAppByName('snake') != undefined)
+			socket.SERVER.engineArray[1].exec.LoadAppByName('snake').exec.generatePath(socket.SERVER.CLIENTS[socket.id].player);
 
-		self.socket.SERVER.CLIENTS[self.currentPlayer.i].player = self.currentPlayer;
-		self.socket.IO[0].emit('3', { n: self.currentPlayer.name });
+		socket.IO[0].emit('3', { n: socket.SERVER.CLIENTS[socket.id].player.name });
 
 		var gameSetup = { w: wf.CONF['SNAKE_CONF'].gameWidth, h: wf.CONF['SNAKE_CONF'].gameHeight, s: wf.CONF['SNAKE_CONF'].speed, sa: wf.CONF['SNAKE_CONF'].speedAngle };
-		gameSetup = JSON.stringify(gameSetup);
-		self.socket.emit('4', gameSetup);
+		socket.emit('4', JSON.stringify(gameSetup));
 	}
 
-	this.updatePlayer = function(d) {
-		self.currentPlayer.l = new Date().getTime();
-		if (d !== self.currentPlayer.d) {
-			self.currentPlayer.d = d;
-		}
+	this.updatePlayer = function(socket, d) {
+		socket.SERVER.CLIENTS[socket.id].player.d = d.d;
+		socket.SERVER.CLIENTS[socket.id].player.x = d.x;
+		socket.SERVER.CLIENTS[socket.id].player.y = d.y;
 	}
 
-	this.resize = function(d) {
-    self.currentPlayer.w = d.w;
-    self.currentPlayer.h = d.h;
+	this.resize = function(socket, d) {
+    self.socket.SERVER.CLIENTS[socket.id].player.w = d.w;
+    self.socket.SERVER.CLIENTS[socket.id].player.h = d.h;
 	}
 
 	this.sendUpdates = function() {
@@ -75,8 +80,8 @@ function serverSnake()
 				for (var i in self.socket.SERVER.CLIENTS) {
 					var listUser = {};
 					for (var y in self.socket.SERVER.CLIENTS) {
-						if (self.socket.SERVER.CLIENTS[y].player != undefined /*&& i !== y*/) {
-							listUser[0] = {
+						if (self.socket.SERVER.CLIENTS[y].player != undefined && i !== y ) {
+							listUser[y] = {
 								c: i === y ? true : false,
 								x: self.socket.SERVER.CLIENTS[y].player.x,
 								y: self.socket.SERVER.CLIENTS[y].player.y,
@@ -89,7 +94,6 @@ function serverSnake()
 					var listFoods = self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ? self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.getFoods() : [];
 					var visibleFoods = [];
 					if( self.socket.SERVER.CLIENTS[i].player != undefined ) {
-						console.log('Server : ' + self.socket.SERVER.CLIENTS[i].player.x);
 						for (var y in listFoods) {
 							if ( listFoods[y].x > self.socket.SERVER.CLIENTS[i].player.x - self.socket.SERVER.CLIENTS[i].player.w/2 - 20 &&
 		            listFoods[y].x < self.socket.SERVER.CLIENTS[i].player.x + self.socket.SERVER.CLIENTS[i].player.w/2 + 20 &&
