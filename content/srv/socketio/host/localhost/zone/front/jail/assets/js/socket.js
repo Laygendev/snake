@@ -2,7 +2,7 @@ var socket;
 var users = [];
 var foods = [];
 
-var player = { i: -1, x: 50, y: 50, s: 0, a: 0, sa: 0, d: 0, l: 0, ls: [], lp: [], n: 0, w: 0, h: 0 };
+var player = {};
 
 function setupSocket() {
   socket.on('1', function (playerSettings) {
@@ -29,7 +29,6 @@ function setupSocket() {
   });
 
   socket.on('6', function (userData) {
-    console.log("[INFO] Game Update");
     userData = JSON.parse(userData);
     // foods = JSON.parse(visibleFoods);
     for (var key in userData) {

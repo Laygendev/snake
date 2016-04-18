@@ -237,6 +237,7 @@ function drawFoods() {
 }
 
 function drawUsers() {
+console.log(users);
   for (var key in users) {
     drawUser(users[key]);
   }

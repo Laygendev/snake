@@ -60,6 +60,7 @@ function serverSnake()
 		if(self.socket != undefined) {
 			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
 			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
+
 				for (var i in self.socket.SERVER.CLIENTS) {
 					var listUser = {};
 					for (var y in self.socket.SERVER.CLIENTS) {
