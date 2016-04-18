@@ -66,38 +66,40 @@ window.onload = function() {
     }
   });
 }
-
-(function() {
-  var lastTime = 0;
-  var vendors = ['ms', 'moz', 'webkit', 'o'];
-  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                                 || window[vendors[x]+'CancelRequestAnimationFrame'];
-  }
-
-  if (!window.requestAnimationFrame)
-    window.requestAnimationFrame = function(callback, element) {
-      var currTime = new Date().getTime();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-        timeToCall);
-      lastTime = currTime + timeToCall;
-      return id;
-    };
-
-  if (!window.cancelAnimationFrame)
-    window.cancelAnimationFrame = function(id) {
-      clearTimeout(id);
-    };
-}());
-
+//
+// (function() {
+//   var lastTime = 0;
+//   var vendors = ['ms', 'moz', 'webkit', 'o'];
+//   for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+//     window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+//     window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+//                                  || window[vendors[x]+'CancelRequestAnimationFrame'];
+//   }
+//
+//   if (!window.requestAnimationFrame)
+//     window.requestAnimationFrame = function(callback, element) {
+//       var currTime = new Date().getTime();
+//       var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+//       var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+//         timeToCall);
+//       lastTime = currTime + timeToCall;
+//       return id;
+//     };
+//
+//   if (!window.cancelAnimationFrame)
+//     window.cancelAnimationFrame = function(id) {
+//       clearTimeout(id);
+//     };
+// }());
+//
 function animLoop() {
-  setTimeout(function() {
-    animLoopHandle = requestAnimationFrame(animLoop);
+//   setTimeout(function() {
+//     animLoopHandle = requestAnimationFrame(animLoop);
     gameLoop();
-  }, 1000 / fps);
+  // }, 1000 / fps);
 }
+
+setInterval(animLoop, 1000 / fps);
 
 var c = document.getElementById('csv');
 c.width = screenWidth;
@@ -133,6 +135,9 @@ function gameLoop() {
 }
 
 function movePlayer() {
+  var lastX = player.x;
+  var lastY = player.y;
+
   if (player.d == KEY_LEFT) {
     player.a -= player.sa;
   }
@@ -151,6 +156,11 @@ function movePlayer() {
       player.lp.unshift(part);
     }
   }
+
+  var xoffset = lastX - player.x;
+  var yoffset = lastY - player.y;
+  player.xoffset = isNaN(xoffset) ? 0 : xoffset;
+  player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 
   users[player.i] = player;
 }
@@ -240,11 +250,11 @@ function drawFoods() {
 
 function drawUsers() {
   for (var key in users) {
-    drawUser(users[key]);
+    drawUser(key, users[key]);
   }
 }
 
-function drawUser(user) {
+function drawUser(key, user) {
   var start = {
     x: player.x - (screenWidth / 2),
     y: player.y - (screenHeight / 2)
@@ -263,7 +273,7 @@ function drawUser(user) {
 
   graph.lineWidth = 2;
   graph.strokeStyle = '#003300';
-  graph.fillStyle = 'green';
+  graph.fillStyle = key == 0 ? 'red' : 'green';
   drawCircle( headX, headY, 10, 20 );
 
   graph.fillStyle = 'red';

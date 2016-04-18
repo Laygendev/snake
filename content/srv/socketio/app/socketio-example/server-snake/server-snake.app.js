@@ -26,6 +26,7 @@ function serverSnake()
 		socket.on('0', self.respawn);
 		socket.on('2', self.gotit);
 		socket.on('5', self.updatePlayer);
+		socket.on('r', self.resize);
 	}
 
 	this.error = function(obj) {
@@ -61,6 +62,11 @@ function serverSnake()
 		}
 	}
 
+	this.resize = function(d) {
+    self.currentPlayer.w = d.w;
+    self.currentPlayer.h = d.h;
+	}
+
 	this.sendUpdates = function() {
 		if(self.socket != undefined) {
 			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
@@ -70,7 +76,7 @@ function serverSnake()
 					var listUser = {};
 					for (var y in self.socket.SERVER.CLIENTS) {
 						if (self.socket.SERVER.CLIENTS[y].player != undefined /*&& i !== y*/) {
-							listUser[y] = {
+							listUser[0] = {
 								c: i === y ? true : false,
 								x: self.socket.SERVER.CLIENTS[y].player.x,
 								y: self.socket.SERVER.CLIENTS[y].player.y,
@@ -83,6 +89,7 @@ function serverSnake()
 					var listFoods = self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ? self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.getFoods() : [];
 					var visibleFoods = [];
 					if( self.socket.SERVER.CLIENTS[i].player != undefined ) {
+						console.log('Server : ' + self.socket.SERVER.CLIENTS[i].player.x);
 						for (var y in listFoods) {
 							if ( listFoods[y].x > self.socket.SERVER.CLIENTS[i].player.x - self.socket.SERVER.CLIENTS[i].player.w/2 - 20 &&
 		            listFoods[y].x < self.socket.SERVER.CLIENTS[i].player.x + self.socket.SERVER.CLIENTS[i].player.w/2 + 20 &&

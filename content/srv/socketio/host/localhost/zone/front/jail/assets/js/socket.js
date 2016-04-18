@@ -33,6 +33,15 @@ function setupSocket() {
     foods = JSON.parse(visibleFoods);
     for (var key in userData) {
       users[key] = userData[key];
+
+      if (users[key].c) {
+      //  var xoffset = player.x - users[key].x;
+      //  var yoffset = player.y - users[key].y;
+      //  player.x = users[key].x;
+      //  player.y = users[key].y;
+      //  player.xoffset = isNaN(xoffset) ? 0 : xoffset;
+      //  player.yoffset = isNaN(yoffset) ? 0 : yoffset;
+     }
     }
   });
 }
@@ -40,9 +49,9 @@ function setupSocket() {
 window.addEventListener('resize', resize);
 
 function resize() {
-    // player.w = c.width = screenWidth = window.innerWidth;
-    // player.h = c.height = screenHeight = window.innerHeight;
-    //
-    // if (socket != undefined)
-    //   socket.emit('windowResized', { screenWidth: screenWidth, screenHeight: screenHeight });
+    player.w = screenWidth = window.innerWidth;
+    player.h = screenHeight = window.innerHeight;
+
+    if (socket != undefined)
+      socket.emit('r', { w: screenWidth, h: screenHeight });
 }

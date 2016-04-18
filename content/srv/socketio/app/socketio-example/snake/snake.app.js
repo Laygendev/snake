@@ -65,6 +65,8 @@ function snake()
     player.x += wf.CONF['SNAKE_CONF'].speed * Math.cos(player.a * Math.PI / 180);
     player.y += wf.CONF['SNAKE_CONF'].speed * Math.sin(player.a * Math.PI / 180);
 
+		console.log( player.x );
+
 		if (player.lp.length > 0) {
 	    var part = player.lp.pop();
 	    part.x = player.x;
@@ -74,9 +76,9 @@ function snake()
 	}
 
 	this.gameLoop = function() {
-		if( self.socket != undefined && self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ) {
-			self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.gameLoop();
-		}
+		// if( self.socket != undefined && self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ) {
+		// 	self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.gameLoop();
+		// }
 	}
 }
 
