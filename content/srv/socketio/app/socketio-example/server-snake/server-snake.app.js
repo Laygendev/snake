@@ -39,10 +39,11 @@ function serverSnake()
 		self.currentPlayer = player;
 		self.currentPlayer.l = new Date().getTime(); // lastHeartBeat
 
-		self.socket.SERVER.APPS['socketio-example'][1].exec.generatePath(self.currentPlayer);
+		self.socket.SERVER.APPS['socketio-example'][2].exec.generatePath(self.currentPlayer);
 
 		self.socket.SERVER.CLIENTS[self.currentPlayer.i].player = self.currentPlayer;
 		self.socket.IO[0].emit('3', { n: self.currentPlayer.name });
+		console.log( self.currentPlayer );
 
 		var gameSetup = { w: wf.CONF['SNAKE_CONF'].gameWidth, h: wf.CONF['SNAKE_CONF'].gameHeight, s: wf.CONF['SNAKE_CONF'].speed, sa: wf.CONF['SNAKE_CONF'].speedAngle };
 		gameSetup = JSON.stringify(gameSetup);
@@ -66,6 +67,7 @@ function serverSnake()
 					for (var y in self.socket.SERVER.CLIENTS) {
 						if (self.socket.SERVER.CLIENTS[y].player != undefined /*&& i !== y*/) {
 							listUser[y] = {
+								c: i === y ? true : false,
 								x: self.socket.SERVER.CLIENTS[y].player.x,
 								y: self.socket.SERVER.CLIENTS[y].player.y,
 								ls: [],
@@ -73,9 +75,24 @@ function serverSnake()
 						}
 					}
 
-					listUser = JSON.stringify(listUser);
+					// foods
+					var listFoods = self.socket.SERVER.APPS['socketio-example'][0].exec.getFoods();
+					var visibleFoods = [];
+					if( self.socket.SERVER.CLIENTS[i].player != undefined ) {
+						for (var y in listFoods) {
+							if ( listFoods[y].x > self.socket.SERVER.CLIENTS[i].player.x - self.socket.SERVER.CLIENTS[i].player.w/2 - 20 &&
+		            listFoods[y].x < self.socket.SERVER.CLIENTS[i].player.x + self.socket.SERVER.CLIENTS[i].player.w/2 + 20 &&
+		            listFoods[y].y > self.socket.SERVER.CLIENTS[i].player.y - self.socket.SERVER.CLIENTS[i].player.h/2 - 20 &&
+		            listFoods[y].y < self.socket.SERVER.CLIENTS[i].player.y + self.socket.SERVER.CLIENTS[i].player.h/2 + 20) {
+									visibleFoods.push(listFoods[y]);
+							}
+						}
+					}
 
-					self.socket.SERVER.CLIENTS[i].emit('6', listUser);
+					listUser = JSON.stringify(listUser);
+					visibleFoods = JSON.stringify(visibleFoods);
+
+					self.socket.SERVER.CLIENTS[i].emit('6', listUser, visibleFoods);
 				}
 			}
 		}

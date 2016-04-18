@@ -9,8 +9,8 @@ function setupSocket() {
     var playerSettings = JSON.parse(playerSettings);
     player = playerSettings;
     player.name = playerName;
-    player.screenWidth = screenWidth;
-    player.screenHeight = screenHeight;
+    player.w = screenWidth;
+    player.h = screenHeight;
     // chat.addSystemLine('Bienvenue petit serpent!');
 
     socket.emit('2', player);
@@ -28,19 +28,11 @@ function setupSocket() {
     resize();
   });
 
-  socket.on('6', function (userData) {
+  socket.on('6', function (userData, visibleFoods) {
     userData = JSON.parse(userData);
-    // foods = JSON.parse(visibleFoods);
+    foods = JSON.parse(visibleFoods);
     for (var key in userData) {
       users[key] = userData[key];
-      if (users[key].c) {
-        var xoffset = player.x - users[key].x;
-        var yoffset = player.y - users[key].y;
-        player.x = users[key].x;
-        player.y = users[key].y;
-        player.xoffset = isNaN(xoffset) ? 0 : xoffset;
-        player.yoffset = isNaN(yoffset) ? 0 : yoffset;
-      }
     }
   });
 }

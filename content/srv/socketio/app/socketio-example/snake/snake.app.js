@@ -34,7 +34,6 @@ function snake()
 			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
 				for (var i in self.socket.SERVER.CLIENTS) {
 					if(self.socket.SERVER.CLIENTS[i].player != undefined) {
-						// console.log(self.socket.SERVER.CLIENTS[i].player);
 						self.tickPlayer(self.socket.SERVER.CLIENTS[i].player);
 					}
 				}
@@ -63,23 +62,8 @@ function snake()
       player.a += wf.CONF['SNAKE_CONF'].speedAngle;
     }
 
-    var borderCalc = wf.CONF['SNAKE_CONF'].radius / 3;
-
     player.x += wf.CONF['SNAKE_CONF'].speed * Math.cos(player.a * Math.PI / 180);
     player.y += wf.CONF['SNAKE_CONF'].speed * Math.sin(player.a * Math.PI / 180);
-
-    if (player.x > wf.CONF['SNAKE_CONF'].gameWidth - borderCalc) {
-        player.x = borderCalc;
-    }
-    if (player.y > wf.CONF['SNAKE_CONF'].gameHeight - borderCalc) {
-        player.y = borderCalc;
-    }
-    if (player.x < borderCalc) {
-        player.x = wf.CONF['SNAKE_CONF'].gameWidth - borderCalc;
-    }
-    if (player.y < borderCalc) {
-        player.y = wf.CONF['SNAKE_CONF'].gameHeight - borderCalc;
-    }
 
 		if (player.lp.length > 0) {
 	    var part = player.lp.pop();
@@ -90,6 +74,9 @@ function snake()
 	}
 
 	this.gameLoop = function() {
+		if( self.socket != undefined ) {
+			self.socket.SERVER.APPS['socketio-example'][0].exec.gameLoop();
+		}
 	}
 }
 

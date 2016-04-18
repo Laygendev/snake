@@ -82,10 +82,10 @@ WF().CONF['SNAKE_CONF'] = {
 
 	"gameWidth": 5000,
 	"gameHeight": 5000,
-	"numberFood": 1000,
+	"numberFood": 1,
 
-	"speed": 2,
-	"speedAngle": 5,
+	"speed": 4,
+	"speedAngle": 4,
 	"radius": 10,
 
 	"KEY_LEFT": 37,
