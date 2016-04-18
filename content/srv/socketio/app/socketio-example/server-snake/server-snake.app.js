@@ -17,7 +17,7 @@ function serverSnake()
 	this.code = function(socket)
 	{
 		self.socket = socket;
-		self.currentPlayer = { i: socket.id, l: new Date().getTime() };
+		self.currentPlayer = { i: socket.id, l: new Date().getTime(), x: 50, y: 50, s: wf.CONF['SNAKE_CONF'].speed, a: 0, sa: wf.CONF['SNAKE_CONF'].speedAngle, d: 0, ls:[], lp: [], n: 0, w: 0, h: 0 };
 		socket.on('error', this.error);
 		socket.on('0', self.respawn);
 		socket.on('2', self.gotit);
@@ -36,15 +36,6 @@ function serverSnake()
 
 	this.gotit = function(player) {
 		console.log('[INFO] Player ' + player.name + ' connecting!');
-
-		player.x = 50;
-		player.y = 50;
-		player.a = 0; // Angle
-		player.d = 0; // Direction lock
-		player.ls = []; // List segment
-		player.lp = []; // List Path
-		player.n = 0; // Number
-
 		self.currentPlayer = player;
 		self.currentPlayer.l = new Date().getTime(); // lastHeartBeat
 
@@ -53,7 +44,7 @@ function serverSnake()
 		self.socket.SERVER.CLIENTS[self.currentPlayer.i].player = self.currentPlayer;
 		self.socket.IO[0].emit('3', { n: self.currentPlayer.name });
 
-		var gameSetup = { w: wf.CONF['SNAKE_CONF'].gameWidth, h: wf.CONF['SNAKE_CONF'].gameHeight };
+		var gameSetup = { w: wf.CONF['SNAKE_CONF'].gameWidth, h: wf.CONF['SNAKE_CONF'].gameHeight, s: wf.CONF['SNAKE_CONF'].speed, sa: wf.CONF['SNAKE_CONF'].speedAngle };
 		gameSetup = JSON.stringify(gameSetup);
 		self.socket.emit('4', gameSetup);
 	}
@@ -73,12 +64,12 @@ function serverSnake()
 					var listUser = [];
 					for (var y in self.socket.SERVER.CLIENTS) {
 						if (self.socket.SERVER.CLIENTS[y].player != undefined) {
-						listUser.push( {
-							c: y === i ? true : false,
-							x: self.socket.SERVER.CLIENTS[y].player.x,
-							y: self.socket.SERVER.CLIENTS[y].player.y,
-							l: [],
-						} );
+						listUser[y] = {
+								c: y === i ? true : false,
+								x: self.socket.SERVER.CLIENTS[y].player.x,
+								y: self.socket.SERVER.CLIENTS[y].player.y,
+								ls: [],
+							};
 						}
 					}
 

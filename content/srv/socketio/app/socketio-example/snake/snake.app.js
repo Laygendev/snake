@@ -94,4 +94,4 @@ function snake()
 }
 
 setInterval(module.exports.snake.moveLoop, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
-setInterval(module.exports.snake.gameLoop, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+setInterval(module.exports.snake.gameLoop, 1000);

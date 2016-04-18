@@ -7,8 +7,9 @@ var gameWidth = 0;
 var gameHeight = 0;
 var xoffset = -gameWidth;
 var yoffset = -gameHeight;
-var directionLock = 0;
 var KEY_ENTER = 13;
+var KEY_LEFT = 37;
+var KEY_RIGHT = 39;
 var fps = 30;
 
 function startGame() {
@@ -67,28 +68,28 @@ window.onload = function() {
 }
 
 (function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
+  var lastTime = 0;
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                 || window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
+  if (!window.requestAnimationFrame)
+    window.requestAnimationFrame = function(callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+        timeToCall);
+      lastTime = currTime + timeToCall;
+      return id;
+    };
 
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
+  if (!window.cancelAnimationFrame)
+    window.cancelAnimationFrame = function(id) {
+      clearTimeout(id);
+    };
 }());
 
 function animLoop() {
@@ -108,16 +109,18 @@ c.addEventListener('keyup', directionUp, false);
 
 function directionDown(event) {
   var key = event.which || event.keyCode;
-  directionLock = key;
+  player.d = key;
 }
 
 function directionUp(event) {
-  directionLock = 0;
+  player.d = 0;
 }
 
 function gameLoop() {
   graph.fillStyle = '#f2fbff';
   graph.fillRect(0, 0, screenWidth, screenHeight);
+
+  movePlayer();
 
   drawGrid();
   drawBorder();
@@ -125,8 +128,35 @@ function gameLoop() {
   drawUsers();
 
   if (gameStart) {
-    socket.emit('5', directionLock);
+    socket.emit('5', player.d);
   }
+}
+
+function movePlayer() {
+  var lastX = player.x;
+  var lastY = player.y;
+
+  if (player.d == KEY_LEFT) {
+    player.a -= player.sa;
+  }
+  if (player.d == KEY_RIGHT) {
+    player.a += player.sa;
+  }
+
+  player.x += player.s * Math.cos(player.a * Math.PI / 180);
+  player.y += player.s * Math.sin(player.a * Math.PI / 180);
+
+	if (player.lp.length > 0) {
+    var part = player.lp.pop();
+    part.x = player.x;
+    part.y = player.y,
+    player.lp.unshift(part);
+  }
+
+  xoffset = lastX - player.x;
+  yoffset = lastY - player.y;
+
+  users[player.i] = player;
 }
 
 function drawCircle(centerX, centerY, radius, sides) {
@@ -143,17 +173,6 @@ function drawCircle(centerX, centerY, radius, sides) {
   }
   graph.closePath();
   graph.fill();
-}
-
-function drawFoods() {
-
-  graph.strokeStyle = 'black';
-  graph.fillStyle = 'orange';
-  graph.lineWidth = 1;
-
-  for ( var key in foods ) {
-    drawCircle(foods[key].x - player.x + screenWidth / 2, foods[key].y -  player.y + screenHeight / 2, 10, 5);
-  }
 }
 
 function drawGrid() {
@@ -213,38 +232,52 @@ function drawBorder() {
   }
 }
 
+function drawFoods() {
+  graph.strokeStyle = 'black';
+  graph.fillStyle = 'orange';
+  graph.lineWidth = 1;
+
+  for ( var key in foods ) {
+    drawCircle(foods[key].x - player.x + screenWidth / 2, foods[key].y -  player.y + screenHeight / 2, 10, 5);
+  }
+}
+
 function drawUsers() {
+  for (var key in users) {
+    drawUser(users[key]);
+  }
+}
+
+function drawUser(user) {
   var start = {
-      x: player.x - (screenWidth / 2),
-      y: player.y - (screenHeight / 2)
+    x: player.x - (screenWidth / 2),
+    y: player.y - (screenHeight / 2)
   };
 
-  for (var key in users) {
-    var x = 0;
-    var y = 0;
-    var lastX = 0;
-    var lastY = 0;
+  var x = 0;
+  var y = 0;
+  var lastX = 0;
+  var lastY = 0;
 
-    var headX = users[key].x - start.x;
-    var headY = users[key].y - start.y;
+  var headX = user.x - start.x;
+  var headY = user.y - start.y;
 
-    headX = valueInRange(-users[key].x - player.x + screenWidth/2, gameWidth - users[key].x + gameWidth - player.x + screenWidth/2, headX);
-    headY = valueInRange(-users[key].y - player.y + screenHeight/2, gameHeight - users[key].y + gameHeight - player.y + screenHeight/2 , headY);
+  headX = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, headX);
+  headY = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , headY);
 
-    graph.lineWidth = 2;
-    graph.strokeStyle = '#003300';
-    graph.fillStyle = 'green';
-    drawCircle( headX, headY, 10, 20 );
+  graph.lineWidth = 2;
+  graph.strokeStyle = '#003300';
+  graph.fillStyle = 'green';
+  drawCircle( headX, headY, 10, 20 );
 
-    graph.fillStyle = 'red';
-    for( var i = 0; i < users[key].l.length; i++ ) {
-        x = users[key].l[i].x - start.x;
-        y = users[key].l[i].y - start.y;
-        x = valueInRange(-users[key].x - player.x + screenWidth/2, gameWidth - users[key].x + gameWidth - player.x + screenWidth/2, x);
-        y = valueInRange(-users[key].y - player.y + screenHeight/2, gameHeight - users[key].y + gameHeight - player.y + screenHeight/2 , y);
+  graph.fillStyle = 'red';
+  for( var i = 0; i < user.ls.length; i++ ) {
+      x = user.ls[i].x - start.x;
+      y = user.ls[i].y - start.y;
+      x = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, x);
+      y = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , y);
 
-        drawCircle(x, y, 10, 20 );
-    }
+      drawCircle(x, y, 10, 20 );
   }
 }
 

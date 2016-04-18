@@ -2,14 +2,7 @@ var socket;
 var users = [];
 var foods = [];
 
-var player = {
-  id: -1,
-  x: screenWidth / 2,
-  y: screenHeight / 2,
-  angle: 0,
-  screenWidth: screenWidth,
-  screenHeight: screenHeight,
-};
+var player = { i: -1, x: 50, y: 50, s: 0, a: 0, sa: 0, d: 0, l: 0, ls: [], lp: [], n: 0, w: 0, h: 0 };
 
 function setupSocket() {
   socket.on('1', function (playerSettings) {
@@ -27,11 +20,11 @@ function setupSocket() {
 
   socket.on('4', function(data) {
     console.log("[INFO] Game Setup");
-    console.log(data);
     data = JSON.parse(data);
-    console.log( data );
     gameWidth = data.w;
     gameHeight = data.h;
+    player.s = data.s;
+    player.sa = data.sa;
     resize();
   });
 
@@ -53,72 +46,14 @@ function setupSocket() {
       }
     }
   });
-
-  // socket.on('2', function (data) {
-  //   leaderboard = data.leaderboard;
-  //   var status = '<span class="title">Classement</span>';
-  //   for (var i = 0; i < leaderboard.length; i++) {
-  //     status += '<br />';
-  //     if (leaderboard[i].id == player.id){
-  //       if(leaderboard[i].name.length !== 0)
-  //         status += '<span class="me">' + (i + 1) + '. ' + leaderboard[i].name + " (" + leaderboard[i].score +")</span>";
-  //       else
-  //         status += '<span class="me">' + (i + 1) + ". Un serpent (" + leaderboard[i].score + ")</span>";
-  //     } else {
-  //       if(leaderboard[i].name.length !== 0)
-  //         status += (i + 1) + '. ' + leaderboard[i].name + " (" + leaderboard[i].score + ")";
-  //       else
-  //         status += (i + 1) + '. Un serpent (' + leaderboard[i].score + ')';
-  //     }
-  //   }
-  //   //status += '<br />Players: ' + data.players;
-  //   document.getElementById('status').innerHTML = status;
-  // });
-  //
-  // socket.on('RIP', function () {
-  //   gameStart = false;
-  //   died = true;
-  //   window.setTimeout(function() {
-  //     document.getElementById('gameAreaWrapper').style.opacity = 0;
-  //     document.getElementById('startMenuWrapper').style.display = "block";
-  //     died = false;
-  //     if (animLoopHandle) {
-  //       window.cancelAnimationFrame(animLoopHandle);
-  //       animLoopHandle = undefined;
-  //     }
-  //
-  //     // startGame();
-  //   }, 1000);
-  // });
-  //
-  // socket.on('playerDied', function (data) {
-  //   // chat.addSystemLine('{GAME} - <b>' + (data.name.length < 1 ? 'Un serpent' : data.name) + '</b> est mort.');
-  // });
-  //
-  // socket.on('playerDisconnect', function (data) {
-  //   // chat.addSystemLine('{GAME} - A bientôt <b>' + (data.name.length < 1 ? 'Un serpent' : data.name) + '</b> !');
-  // });
-  //
-  // socket.on('playerJoin', function (data) {
-  //   // chat.addSystemLine('{GAME} - Bienvenue <b>' + (data.name.length < 1 ? 'Un serpent' : data.name) + '</b> !');
-  // });
-  //
-  // socket.on('serverMSG', function (data) {
-  //   // chat.addSystemLine(data);
-  // });
-  //
-  // // Chat.
-  // socket.on('serverSendPlayerChat', function (data) {
-  //   // chat.addChatLine(data.sender, data.message, false);
-  // });
 }
 
 window.addEventListener('resize', resize);
 
 function resize() {
-    player.screenWidth = c.width = screenWidth = window.innerWidth;
-    player.screenHeight = c.height = screenHeight = window.innerHeight;
-
-    if (socket != undefined)
-      socket.emit('windowResized', { screenWidth: screenWidth, screenHeight: screenHeight });
+    // player.w = c.width = screenWidth = window.innerWidth;
+    // player.h = c.height = screenHeight = window.innerHeight;
+    //
+    // if (socket != undefined)
+    //   socket.emit('windowResized', { screenWidth: screenWidth, screenHeight: screenHeight });
 }
