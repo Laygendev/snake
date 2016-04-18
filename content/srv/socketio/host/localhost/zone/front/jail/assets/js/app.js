@@ -10,7 +10,7 @@ var yoffset = -gameHeight;
 var KEY_ENTER = 13;
 var KEY_LEFT = 37;
 var KEY_RIGHT = 39;
-var fps = 30;
+var fps = 60;
 
 function startGame() {
   playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '').substring(0,25);
@@ -128,7 +128,7 @@ function gameLoop() {
   drawUsers();
 
   if (gameStart) {
-    // socket.emit('5', player.d);
+    socket.emit('5', player.d);
   }
 }
 

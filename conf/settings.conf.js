@@ -77,14 +77,14 @@
     WF().CONF['INSTALL_FILE'] = "install.json";
 
 WF().CONF['SNAKE_CONF'] = {
-	"networkUpdateFactor": 30,
+	"networkUpdateFactor": 60,
 	"maxHeartbeatInterval": 5000,
 
 	"gameWidth": 5000,
 	"gameHeight": 5000,
 	"numberFood": 1000,
 
-	"speed": 5,
+	"speed": 2,
 	"speedAngle": 5,
 	"radius": 10,
 
