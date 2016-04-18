@@ -32,10 +32,8 @@ function setupSocket() {
     console.log("[INFO] Game Update");
     userData = JSON.parse(userData);
     // foods = JSON.parse(visibleFoods);
-
     for (var key in userData) {
       users[key] = userData[key];
-
       if (users[key].c) {
         var xoffset = player.x - users[key].x;
         var yoffset = player.y - users[key].y;

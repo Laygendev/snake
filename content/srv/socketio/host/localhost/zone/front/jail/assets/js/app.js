@@ -133,9 +133,6 @@ function gameLoop() {
 }
 
 function movePlayer() {
-  var lastX = player.x;
-  var lastY = player.y;
-
   if (player.d == KEY_LEFT) {
     player.a -= player.sa;
   }
@@ -152,9 +149,6 @@ function movePlayer() {
     part.y = player.y,
     player.lp.unshift(part);
   }
-
-  xoffset = lastX - player.x;
-  yoffset = lastY - player.y;
 
   users[player.i] = player;
 }

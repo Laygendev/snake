@@ -61,7 +61,7 @@ function serverSnake()
 			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
 			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
 				for (var i in self.socket.SERVER.CLIENTS) {
-					var listUser = [];
+					var listUser = {};
 					for (var y in self.socket.SERVER.CLIENTS) {
 						if (self.socket.SERVER.CLIENTS[y].player != undefined) {
 						listUser[y] = {
@@ -74,6 +74,7 @@ function serverSnake()
 					}
 
 					listUser = JSON.stringify(listUser);
+
 					self.socket.SERVER.CLIENTS[i].emit('6', listUser);
 				}
 			}
