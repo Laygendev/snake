@@ -28,21 +28,22 @@ function setupSocket() {
     resize();
   });
 
-  socket.on('6', function (userData, visibleFoods) {
+  socket.on('6', function (userData) {
     userData = JSON.parse(userData);
-    foods = JSON.parse(visibleFoods);
-    for (var key in userData) {
-      users[key] = userData[key];
-
-      if (users[key].c) {
-      //  var xoffset = player.x - users[key].x;
-      //  var yoffset = player.y - users[key].y;
-      //  player.x = users[key].x;
-      //  player.y = users[key].y;
-      //  player.xoffset = isNaN(xoffset) ? 0 : xoffset;
-      //  player.yoffset = isNaN(yoffset) ? 0 : yoffset;
-     }
-    }
+    users[userData.i] = userData;
+    // foods = JSON.parse(visibleFoods);
+    // for (var key in userData) {
+    //   users[key] = userData[key];
+    //
+    //   if (users[key].c) {
+    //   //  var xoffset = player.x - users[key].x;
+    //   //  var yoffset = player.y - users[key].y;
+    //   //  player.x = users[key].x;
+    //   //  player.y = users[key].y;
+    //   //  player.xoffset = isNaN(xoffset) ? 0 : xoffset;
+    //   //  player.yoffset = isNaN(yoffset) ? 0 : yoffset;
+    //  }
+    // }
   });
 }
 

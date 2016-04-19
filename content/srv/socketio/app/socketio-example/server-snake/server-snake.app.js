@@ -65,6 +65,8 @@ function serverSnake()
 		socket.SERVER.CLIENTS[socket.id].player.d = d.d;
 		socket.SERVER.CLIENTS[socket.id].player.x = d.x;
 		socket.SERVER.CLIENTS[socket.id].player.y = d.y;
+
+		socket.broadcast.emit('6', JSON.stringify(socket.SERVER.CLIENTS[socket.id].player));
 	}
 
 	this.resize = function(socket, d) {
@@ -114,4 +116,4 @@ function serverSnake()
 	}
 }
 
-setInterval(module.exports.serverSnake.sendUpdates, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+// setInterval(module.exports.serverSnake.sendUpdates, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
