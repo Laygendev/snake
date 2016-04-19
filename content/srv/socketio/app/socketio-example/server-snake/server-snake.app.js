@@ -65,7 +65,7 @@ function serverSnake()
 	this.updatePlayer = function(socket, d) {
 		d = JSON.parse(d);
 		// socket.SERVER.CLIENTS[socket.id].player.d = d['0'];
-		socket.IO[0].emit('6', JSON.stringify({
+		socket.broadcast.emit('6', JSON.stringify({
 			0: d[0],
 			1: d[1],
 			3: d[3],
