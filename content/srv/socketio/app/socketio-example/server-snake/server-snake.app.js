@@ -106,7 +106,9 @@ function serverSnake()
 		if(self.socket != undefined) {
 			var listUser = [];
 			for(var key in self.clients) {
-				listUser.push(self.clients[key]);
+				// listUser.push(self.clients[key]);
+				var object = { "x": parseFloat(self.clients[key].x).toFixed(2), "y": parseFloat(self.clients[key].y).toFixed(2) };
+				listUser.push( object );
 			}
 			self.socket.IO[0].emit('6', JSON.stringify(listUser));
 		}

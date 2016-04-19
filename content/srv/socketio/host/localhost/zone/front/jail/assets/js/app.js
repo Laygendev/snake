@@ -264,7 +264,7 @@ function drawUser(user) {
   // graph.strokeStyle = '#003300';
 
   graph.fillStyle = 'green';
-  drawCircle( user.x, user.y, 10, 20 );
+  drawCircle( parseFloat(user.x), parseFloat(user.y), 10, 20 );
 
   // graph.fillStyle = 'red';
   // if (user.ls != undefined) {
