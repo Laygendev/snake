@@ -18,14 +18,14 @@ function snake()
 	}
 
 	this.generatePath = function(player) {
-		var lastX = player.ls.length == 0 ? player.x : player.lp[player.ls[player.ls.length - 1]].x;
-		var lastY = player.ls.length == 0 ? player.y : player.lp[player.ls[player.ls.length - 1]].y;
-		for(var i = player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed); i < (player.number * (20 / wf.CONF['SNAKE_CONF'].speed)) + 1; i++) {
-			if( i % (20 / wf.CONF['SNAKE_CONF'].speed) == 0 && i != player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed) )
-				player.ls.push(i);
-
-			player.lp[i] = { x: lastX, y: lastY };
-		}
+		// var lastX = player.ls.length == 0 ? player.x : player.lp[player.ls[player.ls.length - 1]].x;
+		// var lastY = player.ls.length == 0 ? player.y : player.lp[player.ls[player.ls.length - 1]].y;
+		// for(var i = player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed); i < (player.number * (20 / wf.CONF['SNAKE_CONF'].speed)) + 1; i++) {
+		// 	if( i % (20 / wf.CONF['SNAKE_CONF'].speed) == 0 && i != player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed) )
+		// 		player.ls.push(i);
+		//
+		// 	player.lp[i] = { x: lastX, y: lastY };
+		// }
 	}
 
 	this.moveLoop = function() {
@@ -62,13 +62,13 @@ function snake()
       player.a += wf.CONF['SNAKE_CONF'].speedAngle;
     }
 
-    player.x += wf.CONF['SNAKE_CONF'].speed * Math.cos(player.a * Math.PI / 180);
-    player.y += wf.CONF['SNAKE_CONF'].speed * Math.sin(player.a * Math.PI / 180);
+    player[0] += wf.CONF['SNAKE_CONF'].speed * Math.cos(player.a * Math.PI / 180);
+    player[1] += wf.CONF['SNAKE_CONF'].speed * Math.sin(player.a * Math.PI / 180);
 
 		if (player.lp.length > 0) {
 	    var part = player.lp.pop();
-	    part.x = player.x;
-	    part.y = player.y,
+	    part.x = player[0];
+	    part.y = player[1];
 	    player.lp.unshift(part);
 		}
 	}
@@ -80,5 +80,5 @@ function snake()
 	}
 }
 
-// setInterval(module.exports.snake.moveLoop, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
-setInterval(module.exports.snake.gameLoop, 1000);
+
+// setInterval(module.exports.snake.gameLoop, 1000);

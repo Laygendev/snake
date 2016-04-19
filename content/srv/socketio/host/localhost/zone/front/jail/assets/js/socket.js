@@ -3,7 +3,91 @@ var users = [];
 var foods = [];
 var player = {};
 
+// var onevent = socket.onevent;
+// socket.onevent = function (packet) {
+//     var args = packet.data || [];
+//     onevent.call (this, packet);    // original call
+//     packet.data = ["*"].concat(args);
+//     onevent.call(this, packet);      // additional call to catch-all
+// };
+//
+// socket.on('*', function(event,data) {
+//     if(!data) data = "";
+//     PACKET += objectSize(socket.handshake, data);
+// } );
+// }
+
+
+var PACKETR = 0;
+var PACKETE = 0;
+
+
+function objectSize( object , msg )
+{
+		/*
+			Ici ta fonction qui calcule la taille du packet envoyé
+			en faisant une fonction récursive et en calculant le
+			nombre de byte, cf function en dessous
+		*/
+		var result = roughSizeOfObject(object);
+		if(msg)
+			result += roughSizeOfObject(msg);
+		return result;
+}
+
+function roughSizeOfObject( value, level ) {
+    if(level == undefined) level = 0;
+    var bytes = 0;
+
+    if ( typeof value === 'boolean' ) {
+        bytes = 4;
+    }
+    else if ( typeof value === 'string' ) {
+        bytes = value.length * 2;
+    }
+    else if ( typeof value === 'number' ) {
+        bytes = 8;
+    }
+    else if ( typeof value === 'object' ) {
+        if(value['__visited__']) return 0;
+        value['__visited__'] = 1;
+        for( i in value ) {
+            bytes += i.length * 2;
+            bytes+= 8; // an assumed existence overhead
+            bytes+= roughSizeOfObject( value[i], 1 )
+        }
+    }
+
+    if(level == 0){
+        clear__visited__(value);
+    }
+    return bytes;
+}
+
+function clear__visited__(value){
+    if(typeof value == 'object'){
+        delete value['__visited__'];
+        for(var i in value){
+            clear__visited__(value[i]);
+        }
+    }
+}
+
+
 function setupSocket() {
+  var onevent = socket.onevent;
+  socket.onevent = function(packet) {
+    var args = packet.data || [];
+    onevent.call (this, packet);    // original call
+    packet.data = ["*"].concat(args);
+    onevent.call(this, packet);
+  };
+
+  socket.on('*', function(event, data) {
+    if(!data) data = "";
+    PACKETR += objectSize(socket.handshake, data);
+  });
+
   socket.on('1', function (playerSettings) {
     var playerSettings = JSON.parse(playerSettings);
     player = playerSettings;
@@ -11,7 +95,7 @@ function setupSocket() {
     player.w = screenWidth;
     player.h = screenHeight;
     // chat.addSystemLine('Bienvenue petit serpent!');
-
+    PACKETE += objectSize(player);
     socket.emit('2', player);
     gameStart = true;
     c.focus();
@@ -28,12 +112,19 @@ function setupSocket() {
   });
 
   socket.on('6', function (userData) {
-    userData = JSON.parse(userData);
-    // users[userData.i] = userData;
-    // foods = JSON.parse(visibleFoods);
-    for (var key in userData) {
-      users[key] = userData[key];
-    }
+		if(userData != undefined && userData[3] != undefined) {
+	    userData = JSON.parse(userData);
+			console.log( users );
+			users[userData[3]] = userData;
+			// player[0] = userData[0];
+			// player[1] = userData[1];
+		}
+	    // for (var key in userData) {
+	    //   users[key] = userData[key];
+			// 	player[0] = userData[key][0];
+			// 	player[1] = userData[key][1];
+	    // }
+		// }
   });
 }
 
