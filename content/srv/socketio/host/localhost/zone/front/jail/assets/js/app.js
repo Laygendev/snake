@@ -30,6 +30,7 @@ function startGame() {
     animLoop();
 
   socket.emit('0');
+  gameStart = true;
 }
 
 
@@ -122,18 +123,18 @@ function gameLoop() {
 
 
   if (gameStart) {
-    drawGrid();
+    // drawGrid();
     drawBorder();
-    drawFoods();
+    // drawFoods();
     drawUsers();
 
-    movePlayer();
-    var playerSynchro = {
-      d: player.d,
-      x: parseFloat(player.x).toFixed(2),
-      y: parseFloat(player.y).toFixed(2),
-    };
-    socket.emit('5', playerSynchro);
+    // movePlayer();
+    // var playerSynchro = {
+    //   d: player.d,
+    //   x: parseFloat(player.x).toFixed(2),
+    //   y: parseFloat(player.y).toFixed(2),
+    // };
+    // socket.emit('5', playerSynchro);
   }
 }
 
@@ -191,37 +192,37 @@ function drawBorder() {
   graph.lineWidth = 1;
   graph.strokeStyle = 'black';
 
-  if (player.x <= screenWidth/2) {
-    graph.beginPath();
-    graph.moveTo(screenWidth/2 - player.x, 0 ? player.y > screenHeight/2 : screenHeight/2 - player.y);
-    graph.lineTo(screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
-    graph.strokeStyle = "black";
-    graph.stroke();
-  }
+  graph.beginPath();
+  graph.moveTo(10, 10 );
+  graph.lineTo(10, 410 );
+  graph.stroke();
 
-  if (player.y <= screenHeight/2) {
-    graph.beginPath();
-    graph.moveTo(0 ? player.x > screenWidth/2 : screenWidth/2 - player.x, screenHeight/2 - player.y);
-    graph.lineTo(gameWidth + screenWidth/2 - player.x, screenHeight/2 - player.y);
-    graph.strokeStyle = "black";
-    graph.stroke();
-  }
+  graph.beginPath();
+  graph.moveTo(10, 10);
+  graph.lineTo(410, 10);
+  graph.stroke();
 
-  if (gameWidth - player.x <= screenWidth/2) {
-    graph.beginPath();
-    graph.moveTo(gameWidth + screenWidth/2 - player.x, screenHeight/2 - player.y);
-    graph.lineTo(gameWidth + screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
-    graph.strokeStyle = "black";
-    graph.stroke();
-  }
+  graph.beginPath();
+  graph.moveTo(410, 10);
+  graph.lineTo(410, 410);
+  graph.stroke();
 
-  if (gameHeight - player.y <= screenHeight/2) {
-    graph.beginPath();
-    graph.moveTo(gameWidth + screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
-    graph.lineTo(screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
-    graph.strokeStyle = "black";
-    graph.stroke();
-  }
+  graph.beginPath();
+  graph.moveTo(410, 410);
+  graph.lineTo(10, 410);
+  graph.stroke();
+  //
+  // graph.beginPath();
+  // graph.moveTo(gameWidth + screenWidth/2 - player.x, screenHeight/2 - player.y);
+  // graph.lineTo(gameWidth + screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
+  // graph.strokeStyle = "black";
+  // graph.stroke();
+  //
+  // graph.beginPath();
+  // graph.moveTo(gameWidth + screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
+  // graph.lineTo(screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
+  // graph.strokeStyle = "black";
+  // graph.stroke();
 }
 
 function drawFoods() {
@@ -235,7 +236,7 @@ function drawFoods() {
 }
 
 function drawUsers() {
-  info();
+  // info();
   for (var key in users) {
     drawUser(users[key]);
   }
@@ -244,37 +245,38 @@ function drawUsers() {
 }
 
 function drawUser(user) {
-  var start = {
-    x: player.x - (screenWidth / 2),
-    y: player.y - (screenHeight / 2)
-  };
+  // var start = {
+  //   x: player.x - (screenWidth / 2),
+  //   y: player.y - (screenHeight / 2)
+  // };
 
-  var x = 0;
-  var y = 0;
-  var lastX = 0;
-  var lastY = 0;
+  // var x = 0;
+  // var y = 0;
+  // var lastX = 0;
+  // var lastY = 0;
+  //
+  // var headX = user.x - start.x;
+  // var headY = user.y - start.y;
+  //
+  // headX = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, headX);
+  // headY = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , headY);
+  // graph.lineWidth = 2;
+  // graph.strokeStyle = '#003300';
 
-  var headX = user.x - start.x;
-  var headY = user.y - start.y;
-
-  headX = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, headX);
-  headY = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , headY);
-  graph.lineWidth = 2;
-  graph.strokeStyle = '#003300';
   graph.fillStyle = 'green';
-  drawCircle( headX, headY, 10, 20 );
+  drawCircle( user.x, user.y, 10, 20 );
 
-  graph.fillStyle = 'red';
-  if (user.ls != undefined) {
-    for (var i = 0; i < user.ls.length; i++) {
-        x = user.ls[i].x - start.x;
-        y = user.ls[i].y - start.y;
-        x = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, x);
-        y = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , y);
-
-        drawCircle(x, y, 10, 20);
-    }
-  }
+  // graph.fillStyle = 'red';
+  // if (user.ls != undefined) {
+  //   for (var i = 0; i < user.ls.length; i++) {
+  //       x = user.ls[i].x - start.x;
+  //       y = user.ls[i].y - start.y;
+  //       x = valueInRange(-user.x - player.x + screenWidth/2, gameWidth - user.x + gameWidth - player.x + screenWidth/2, x);
+  //       y = valueInRange(-user.y - player.y + screenHeight/2, gameHeight - user.y + gameHeight - player.y + screenHeight/2 , y);
+  //
+  //       drawCircle(x, y, 10, 20);
+  //   }
+  // }
 }
 
 function info() {

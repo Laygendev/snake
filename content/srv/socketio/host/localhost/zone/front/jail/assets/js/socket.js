@@ -3,7 +3,6 @@ var users = [];
 var foods = [];
 var player = {};
 
-
 function setupSocket() {
   socket.on('1', function (playerSettings) {
     var playerSettings = JSON.parse(playerSettings);
@@ -30,20 +29,11 @@ function setupSocket() {
 
   socket.on('6', function (userData) {
     userData = JSON.parse(userData);
-    users[userData.i] = userData;
+    // users[userData.i] = userData;
     // foods = JSON.parse(visibleFoods);
-    // for (var key in userData) {
-    //   users[key] = userData[key];
-    //
-    //   if (users[key].c) {
-    //   //  var xoffset = player.x - users[key].x;
-    //   //  var yoffset = player.y - users[key].y;
-    //   //  player.x = users[key].x;
-    //   //  player.y = users[key].y;
-    //   //  player.xoffset = isNaN(xoffset) ? 0 : xoffset;
-    //   //  player.yoffset = isNaN(yoffset) ? 0 : yoffset;
-    //  }
-    // }
+    for (var key in userData) {
+      users[key] = userData[key];
+    }
   });
 }
 
