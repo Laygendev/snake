@@ -65,14 +65,6 @@ function serverSnake()
 	this.updatePlayer = function(socket, d) {
 		d = JSON.parse(d);
 		socket.SERVER.CLIENTS[socket.id].player.d = d[0];
-		// socket.SERVER.CLIENTS[socket.id].player[0] = d[0];
-		// socket.SERVER.CLIENTS[socket.id].player[1] = d[1];
-		// socket.SERVER.CLIENTS[socket.id].player[3] = d[3];
-		// socket.broadcast.emit('6', JSON.stringify({
-		// 	0: d[0],
-		// 	1: d[1],
-		// 	3: d[3],
-		// }) );
 	}
 
 	this.resize = function(socket, d) {
@@ -82,8 +74,8 @@ function serverSnake()
 
 	this.sendUpdates = function() {
 		if(self.socket != undefined) {
-			if (socket.SERVER.engineArray[2].exec.LoadAppByName('snake') != undefined)
-				socket.SERVER.engineArray[2].exec.LoadAppByName('snake').exec.moveLoop();
+			if (self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake') != undefined)
+				self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake').exec.moveLoop();
 
 			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
 			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
