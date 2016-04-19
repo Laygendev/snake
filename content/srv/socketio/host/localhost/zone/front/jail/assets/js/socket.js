@@ -114,6 +114,7 @@ function setupSocket() {
   socket.on('6', function (userData) {
 		if(userData != undefined) {
 	    userData = JSON.parse(userData);
+			users = [];
 	    for (var key in userData) {
 	      users[key] = userData[key];
 				if(userData[key][4]) {
