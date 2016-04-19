@@ -112,19 +112,16 @@ function setupSocket() {
   });
 
   socket.on('6', function (userData) {
-		if(userData != undefined && userData[3] != undefined) {
+		if(userData != undefined) {
 	    userData = JSON.parse(userData);
-			console.log( users );
-			users[userData[3]] = userData;
-			// player[0] = userData[0];
-			// player[1] = userData[1];
+	    for (var key in userData) {
+	      users[key] = userData[key];
+				if(userData[key][4]) {
+					player[0] = userData[key][0];
+					player[1] = userData[key][1];
+				}
+	    }
 		}
-	    // for (var key in userData) {
-	    //   users[key] = userData[key];
-			// 	player[0] = userData[key][0];
-			// 	player[1] = userData[key][1];
-	    // }
-		// }
   });
 }
 

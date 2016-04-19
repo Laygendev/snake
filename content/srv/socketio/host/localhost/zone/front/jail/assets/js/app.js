@@ -125,11 +125,11 @@ function directionUp(event) {
 
 function gameLoop() {
   if( gameStart ) {
-    movePlayer();
+    // movePlayer();
     var playerSynchro = {
-      0: player[0],
-      1: player[1],
-      3: player[3],
+      0: player.d,
+      // 1: player[1],
+      // 3: player[3],
     };
     PACKETE += objectSize(JSON.stringify(playerSynchro));
     socket.emit('5', JSON.stringify(playerSynchro));

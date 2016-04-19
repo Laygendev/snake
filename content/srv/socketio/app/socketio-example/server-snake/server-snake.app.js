@@ -64,12 +64,15 @@ function serverSnake()
 
 	this.updatePlayer = function(socket, d) {
 		d = JSON.parse(d);
-		// socket.SERVER.CLIENTS[socket.id].player.d = d['0'];
-		socket.broadcast.emit('6', JSON.stringify({
-			0: d[0],
-			1: d[1],
-			3: d[3],
-		}) );
+		socket.SERVER.CLIENTS[socket.id].player.d = d[0];
+		// socket.SERVER.CLIENTS[socket.id].player[0] = d[0];
+		// socket.SERVER.CLIENTS[socket.id].player[1] = d[1];
+		// socket.SERVER.CLIENTS[socket.id].player[3] = d[3];
+		// socket.broadcast.emit('6', JSON.stringify({
+		// 	0: d[0],
+		// 	1: d[1],
+		// 	3: d[3],
+		// }) );
 	}
 
 	this.resize = function(socket, d) {
@@ -78,32 +81,78 @@ function serverSnake()
 	}
 
 	this.sendUpdates = function() {
-		// if(self.socket != undefined) {
-		// 	// if (self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake') != undefined)
-		// 		// self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake').exec.moveLoop();
-		//
-		// 	var size = Object.keys(self.socket.SERVER.CLIENTS).length;
-		// 	if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
-		//
-		// 		for (var i in self.socket.SERVER.CLIENTS) {
-		// 			var listUser = {};
-		// 			for (var y in self.socket.SERVER.CLIENTS) {
-		// 				if (self.socket.SERVER.CLIENTS[y].player != undefined && y != i) {
-		// 					listUser[y] = {
-		// 						0: parseFloat(self.socket.SERVER.CLIENTS[y].player['0']).toFixed(2),
-		// 						1: parseFloat(self.socket.SERVER.CLIENTS[y].player['1']).toFixed(2),
-		// 					};
-		// 				}
-		// 			}
-		//
-		// 			listUser = JSON.stringify(listUser);
-		// 			self.socket.SERVER.CLIENTS[i].emit('6', listUser);
-		// 		}
-		// 	}
-		// }
+		if(self.socket != undefined) {
+			self.moveLoop();
 
-		// setTimeout(self.sendUpdates, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
+			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
+
+				for (var i in self.socket.SERVER.CLIENTS) {
+					var listUser = {};
+					for (var y in self.socket.SERVER.CLIENTS) {
+						if (self.socket.SERVER.CLIENTS[y].player != undefined) {
+							listUser[y] = {
+								0: parseFloat(self.socket.SERVER.CLIENTS[y].player[0]).toFixed(2),
+								1: parseFloat(self.socket.SERVER.CLIENTS[y].player[1]).toFixed(2),
+								3: y,
+								4: i === y ? true : false,
+							};
+						}
+					}
+
+					listUser = JSON.stringify(listUser);
+					self.socket.SERVER.CLIENTS[i].emit('6', listUser);
+				}
+			}
+		}
+
+		setTimeout(self.sendUpdates, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+	}
+
+	this.moveLoop = function() {
+		if(self.socket != undefined) {
+			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
+			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
+				for (var i in self.socket.SERVER.CLIENTS) {
+					if(self.socket.SERVER.CLIENTS[i].player != undefined) {
+						self.tickPlayer(self.socket.SERVER.CLIENTS[i].player);
+					}
+				}
+			}
+		}
+	}
+
+	this.tickPlayer = function(player) {
+		// if(currentPlayer.lastHeartbeat < new Date().getTime() - c.maxHeartbeatInterval) {
+    //   sockets[currentPlayer.id].emit('kick', 'Last heartbeat received over ' + c.maxHeartbeatInterval + ' ago.');
+    //   sockets[currentPlayer.id].emit('RIP');
+    //   sockets[currentPlayer.id].disconnect();
+    // }
+    if (player != undefined) {
+      self.movePlayer(player);
+      // checkCollider(currentPlayer);
+      // eatFood(currentPlayer);
+    }
+	}
+
+	this.movePlayer = function(player) {
+		if (player.d == wf.CONF['SNAKE_CONF'].KEY_LEFT) {
+      player.a -= wf.CONF['SNAKE_CONF'].speedAngle;
+    }
+    if (player.d == wf.CONF['SNAKE_CONF'].KEY_RIGHT) {
+      player.a += wf.CONF['SNAKE_CONF'].speedAngle;
+    }
+
+    player[0] += wf.CONF['SNAKE_CONF'].speed * Math.cos(player.a * Math.PI / 180);
+    player[1] += wf.CONF['SNAKE_CONF'].speed * Math.sin(player.a * Math.PI / 180);
+
+		// if (player.lp.length > 0) {
+	  //   var part = player.lp.pop();
+	  //   part.x = player[0];
+	  //   part.y = player[1];
+	  //   player.lp.unshift(part);
+		// }
 	}
 }
 
-// module.exports.serverSnake.sendUpdates();
+module.exports.serverSnake.sendUpdates();
