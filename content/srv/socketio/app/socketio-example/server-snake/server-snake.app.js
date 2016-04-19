@@ -26,24 +26,6 @@ function serverSnake()
 			s: 1,
 			a: Math.floor(Math.random() * 360)
 		});
-	 	self.clients.push({
-			x: Math.floor(Math.random() * (400 - 20 - 20)) + 20,
-			y: Math.floor(Math.random() * (400 - 20 - 20)) + 20,
-			s: 1,
-			a: Math.floor(Math.random() * 360)
-		});
-	 	self.clients.push({
-			x: Math.floor(Math.random() * (400 - 20 - 20)) + 20,
-			y: Math.floor(Math.random() * (400 - 20 - 20)) + 20,
-			s: 1,
-			a: Math.floor(Math.random() * 360)
-		});
-	 	self.clients.push({
-			x: Math.floor(Math.random() * (400 - 20 - 20)) + 20,
-			y: Math.floor(Math.random() * (400 - 20 - 20)) + 20,
-			s: 5,
-			a: Math.floor(Math.random() * 360)
-		});
 
 		// self.socket.SERVER.CLIENTS[socket.id].player = {
 		// 	i:socket.id,
