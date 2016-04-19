@@ -1,8 +1,8 @@
 var socket;
 var users = [];
 var foods = [];
-
 var player = {};
+
 
 function setupSocket() {
   socket.on('1', function (playerSettings) {

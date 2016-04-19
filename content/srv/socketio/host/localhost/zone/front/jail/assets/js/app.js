@@ -130,40 +130,23 @@ function gameLoop() {
     movePlayer();
     var playerSynchro = {
       d: player.d,
-      x: player.x,
-      y: player.y
+      x: parseFloat(player.x).toFixed(2),
+      y: parseFloat(player.y).toFixed(2),
     };
     socket.emit('5', playerSynchro);
   }
 }
 
 function movePlayer() {
-  // var lastX = player.x;
-  // var lastY = player.y;
-  //
   if (player.d == KEY_LEFT) {
     player.a -= player.sa;
   }
   if (player.d == KEY_RIGHT) {
     player.a += player.sa;
   }
-  //
+
   player.x += player.s * Math.cos(player.a * Math.PI / 180);
   player.y += player.s * Math.sin(player.a * Math.PI / 180);
-  //
-  // if (player.lp != undefined) {
-  // 	if (player.lp.length > 0) {
-  //     var part = player.lp.pop();
-  //     part.x = player.x;
-  //     part.y = player.y,
-  //     player.lp.unshift(part);
-  //   }
-  // }
-
-  // var xoffset = lastX - player.x;
-  // var yoffset = lastY - player.y;
-  // player.xoffset = isNaN(xoffset) ? 0 : xoffset;
-  // player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 
   users[player.i] = player;
 }
