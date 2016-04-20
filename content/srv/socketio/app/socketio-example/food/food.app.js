@@ -12,7 +12,7 @@ function food()
 {
 	var self = this;
 	this.foods = [];
-	this.foodToAdd = 100;
+	this.foodToAdd = 1000;
 
 	this.code = function(socket) {
 	}
@@ -21,9 +21,13 @@ function food()
 		return self.foods;
 	}
 
-  this.addFood = function(toAdd) {
+	this.addFood = function(n) {
+		self.foodToAdd = n;
+	}
+
+  this.createFood = function(toAdd) {
     var radius = 10;
-    while (toAdd--) {
+    while (self.foodToAdd) {
       var position = {
         x: Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameWidth - 10 - 10)) + 10,
         y: Math.floor(Math.random() * (wf.CONF['SNAKE_CONF'].gameHeight - 10 - 10)) + 10
@@ -39,8 +43,9 @@ function food()
   }
 
 	this.gameLoop = function() {
+
 		if (self.foodToAdd > 0) {
-      self.addFood(self.foodToAdd);
+      self.createFood(self.foodToAdd);
     }
 	}
 }

@@ -28,33 +28,33 @@ function snake()
 		}
 	}
 
-	this.moveLoop = function() {
-		if(self.socket != undefined) {
-			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
-			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
-				for (var i in self.socket.SERVER.CLIENTS) {
-					if(self.socket.SERVER.CLIENTS[i].player != undefined) {
-						self.tickPlayer(self.socket.SERVER.CLIENTS[i].player);
+	this.moveLoop = function(socket) {
+		if(socket != undefined) {
+			var size = Object.keys(socket.SERVER.CLIENTS).length;
+			if(socket.SERVER != undefined && socket.SERVER.CLIENTS != undefined && size > 0) {
+				for (var i in socket.SERVER.CLIENTS) {
+					if(socket.SERVER.CLIENTS[i].player != undefined) {
+						self.tickPlayer(socket.SERVER.CLIENTS[i].player, socket);
 					}
 				}
 			}
 		}
 	}
 
-	this.tickPlayer = function(player) {
+	this.tickPlayer = function(player, socket) {
 		// if(currentPlayer.lastHeartbeat < new Date().getTime() - c.maxHeartbeatInterval) {
     //   sockets[currentPlayer.id].emit('kick', 'Last heartbeat received over ' + c.maxHeartbeatInterval + ' ago.');
     //   sockets[currentPlayer.id].emit('RIP');
     //   sockets[currentPlayer.id].disconnect();
     // }
     if (player != undefined) {
-      self.movePlayer(player);
+      self.movePlayer(player, socket);
       // checkCollider(currentPlayer);
-      self.eatFood(player);
+      self.eatFood(player, socket);
     }
 	}
 
-	this.movePlayer = function(player) {
+	this.movePlayer = function(player, socket) {
 		if (player.d == wf.CONF['SNAKE_CONF'].KEY_LEFT) {
       player.a -= wf.CONF['SNAKE_CONF'].speedAngle;
     }
@@ -73,19 +73,24 @@ function snake()
 		}
 	}
 
-	this.eatFood = function(player) {
-		var listFoods = self.socket.SERVER.engineArray[2].exec.LoadAppByName('food') != undefined ? self.socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec.getFoods() : [];
-		for (var key in listFoods) {
-      if ( listFoods[key].x < player[0] + 8 &&
-      listFoods[key].x + 5 > player[0] - 8 &&
-      listFoods[key].y < player[1] + 8 &&
-      listFoods[key].y + 5 > player[1] - 8 ) {
-        listFoods.splice( key, 1 );
-        // self.foodToAdd++;
-        player.n++;
-        self.generatePath(player);
-      }
-    }
+	this.eatFood = function(player, socket) {
+		var foodApp = socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec;
+
+		if(foodApp!=undefined) {
+			var listFoods = foodApp.getFoods();
+			for (var key in listFoods) {
+	      if ( listFoods[key].x < player[0] + 8 &&
+	      listFoods[key].x + 5 > player[0] - 8 &&
+	      listFoods[key].y < player[1] + 8 &&
+	      listFoods[key].y + 5 > player[1] - 8 ) {
+	        listFoods.splice( key, 1 );
+					foodApp.addFood(1);
+	        player.n++;
+	        self.generatePath(player);
+					break;
+	      }
+	    }
+		}
 	}
 
 	this.gameLoop = function() {

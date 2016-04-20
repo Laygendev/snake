@@ -76,7 +76,7 @@ function serverSnake()
 		if(self.socket != undefined) {
 			self.sendUpdates();
 			if (self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake') != undefined)
-				self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake').exec.moveLoop();
+				self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake').exec.moveLoop(self.socket);
 
 			if (self.socket.SERVER.engineArray[2].exec.LoadAppByName('food') != undefined)
 				self.socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec.gameLoop();
