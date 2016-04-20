@@ -163,18 +163,18 @@ function renderLoop() {
 }
 
 function movePlayer() {
-  if (player.d == KEY_LEFT) {
-    player.a -= player.sa;
-  }
-  if (player.d == KEY_RIGHT) {
-    player.a += player.sa;
-  }
-
-  player[0] += player.s * Math.cos(player.a * Math.PI / 180);
-  player[1] += player.s * Math.sin(player.a * Math.PI / 180);
-
-  if(player[3]!=undefined)
-    users[player[3]] = player;
+  // if (player.d == KEY_LEFT) {
+  //   player.a -= player.sa;
+  // }
+  // if (player.d == KEY_RIGHT) {
+  //   player.a += player.sa;
+  // }
+  //
+  // player[0] += player.s * Math.cos(player.a * Math.PI / 180);
+  // player[1] += player.s * Math.sin(player.a * Math.PI / 180);
+  //
+  // if(player[3]!=undefined)
+  //   users[player[3]] = player;
 }
 
 function drawCircle(centerX, centerY, radius, sides) {

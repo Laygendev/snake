@@ -79,23 +79,17 @@ function serverSnake()
 
 			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
 			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
-
+				var listUser = {};
 				for (var i in self.socket.SERVER.CLIENTS) {
-					var listUser = {};
-					for (var y in self.socket.SERVER.CLIENTS) {
-						if (self.socket.SERVER.CLIENTS[y].player != undefined) {
-							listUser[y] = {
-								0: parseFloat(self.socket.SERVER.CLIENTS[y].player[0]).toFixed(2),
-								1: parseFloat(self.socket.SERVER.CLIENTS[y].player[1]).toFixed(2),
-								3: y,
-								4: i === y ? true : false,
-							};
-						}
+					listUser[i] = {
+						0: parseFloat(self.socket.SERVER.CLIENTS[i].player[0]).toFixed(2),
+						1: parseFloat(self.socket.SERVER.CLIENTS[i].player[1]).toFixed(2),
+						3: i,
 					}
-
-					listUser = JSON.stringify(listUser);
-					self.socket.SERVER.CLIENTS[i].emit('6', listUser);
 				}
+
+				listUser = JSON.stringify(listUser);
+				self.socket.IO[0].emit('6', listUser);
 			}
 		}
 
