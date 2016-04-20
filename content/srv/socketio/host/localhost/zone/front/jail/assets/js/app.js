@@ -151,7 +151,7 @@ function renderLoop() {
 
     graph.fillText("R : " + PACKETR + " o/s - E : " + PACKETE + " o/s", 20, 20);
 
-    movePlayer();
+    // movePlayer();
     drawGrid();
     drawBorder();
     // drawFoods();

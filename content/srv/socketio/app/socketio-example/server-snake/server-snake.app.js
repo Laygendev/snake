@@ -83,10 +83,12 @@ function serverSnake()
 				for (var i in self.socket.SERVER.CLIENTS) {
 					var listUser = {};
 					for (var y in self.socket.SERVER.CLIENTS) {
-						if (self.socket.SERVER.CLIENTS[y].player != undefined && i != y) {
+						if (self.socket.SERVER.CLIENTS[y].player != undefined) {
 							listUser[y] = {
 								0: parseFloat(self.socket.SERVER.CLIENTS[y].player[0]).toFixed(2),
 								1: parseFloat(self.socket.SERVER.CLIENTS[y].player[1]).toFixed(2),
+								3: y,
+								4: i === y ? true : false,
 							};
 						}
 					}
