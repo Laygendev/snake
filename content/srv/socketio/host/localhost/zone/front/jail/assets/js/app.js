@@ -154,7 +154,7 @@ function renderLoop() {
     // movePlayer();
     drawGrid();
     drawBorder();
-    // drawFoods();
+    drawFoods();
     drawUsers();
 
 
@@ -291,17 +291,17 @@ function drawUser(user) {
   graph.fillStyle = 'green';
   drawCircle( headX, headY, 10, 20 );
 
-  // graph.fillStyle = 'red';
-  // if (user.ls != undefined) {
-  //   for (var i = 0; i < user.ls.length; i++) {
-  //       x = user.ls[i].x - start.x;
-  //       y = user.ls[i].y - start.y;
-  //       x = valueInRange(-user.x - player[0] + screenWidth/2, gameWidth - user.x + gameWidth - player[0] + screenWidth/2, x);
-  //       y = valueInRange(-user.y - player[1] + screenHeight/2, gameHeight - user.y + gameHeight - player[1] + screenHeight/2 , y);
-  //
-  //       drawCircle(x, y, 10, 20);
-  //   }
-  // }
+  graph.fillStyle = 'red';
+  if (user[4] != undefined) {
+    for (var i = 0; i < user[4].length; i++) {
+        x = user[4][i][0] - start.x;
+        y = user[4][i][1] - start.y;
+        x = valueInRange(-user[0] - player[0] + screenWidth/2, gameWidth - user[0] + gameWidth - player[0] + screenWidth/2, x);
+        y = valueInRange(-user[1] - player[1] + screenHeight/2, gameHeight - user[1] + gameHeight - player[1] + screenHeight/2 , y);
+
+        drawCircle(x, y, 10, 20);
+    }
+  }
 }
 
 function info() {

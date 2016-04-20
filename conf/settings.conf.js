@@ -79,12 +79,11 @@
 WF().CONF['SNAKE_CONF'] = {
 	"networkUpdateFactor": 60,
 	// "fps": 2,
-	"ball": 1,
 	"maxHeartbeatInterval": 5000,
 
 	"gameWidth": 5000,
 	"gameHeight": 5000,
-	"numberFood": 1,
+	"numberFood": 100,
 
 	"speed": 1,
 	"speedAngle": 4,

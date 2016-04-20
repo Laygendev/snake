@@ -18,14 +18,14 @@ function snake()
 	}
 
 	this.generatePath = function(player) {
-		// var lastX = player.ls.length == 0 ? player.x : player.lp[player.ls[player.ls.length - 1]].x;
-		// var lastY = player.ls.length == 0 ? player.y : player.lp[player.ls[player.ls.length - 1]].y;
-		// for(var i = player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed); i < (player.number * (20 / wf.CONF['SNAKE_CONF'].speed)) + 1; i++) {
-		// 	if( i % (20 / wf.CONF['SNAKE_CONF'].speed) == 0 && i != player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed) )
-		// 		player.ls.push(i);
-		//
-		// 	player.lp[i] = { x: lastX, y: lastY };
-		// }
+		var lastX = player.ls.length == 0 ? player[0] : player.lp[player.ls[player.ls.length - 1]][0];
+		var lastY = player.ls.length == 0 ? player[1] : player.lp[player.ls[player.ls.length - 1]][1];
+		for(var i = player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed); i < (player.n * (20 / wf.CONF['SNAKE_CONF'].speed)) + 1; i++) {
+			if( i % (20 / wf.CONF['SNAKE_CONF'].speed) == 0 && i != player.ls.length * (20 / wf.CONF['SNAKE_CONF'].speed) )
+				player.ls.push(i);
+
+			player.lp[i] = { 0: lastX, 1: lastY };
+		}
 	}
 
 	this.moveLoop = function() {
@@ -50,7 +50,7 @@ function snake()
     if (player != undefined) {
       self.movePlayer(player);
       // checkCollider(currentPlayer);
-      // eatFood(currentPlayer);
+      self.eatFood(player);
     }
 	}
 
@@ -67,16 +67,31 @@ function snake()
 
 		if (player.lp.length > 0) {
 	    var part = player.lp.pop();
-	    part.x = player[0];
-	    part.y = player[1];
+	    part[0] = player[0];
+	    part[1] = player[1];
 	    player.lp.unshift(part);
 		}
 	}
 
+	this.eatFood = function(player) {
+		var listFoods = self.socket.SERVER.engineArray[2].exec.LoadAppByName('food') != undefined ? self.socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec.getFoods() : [];
+		for (var key in listFoods) {
+      if ( listFoods[key].x < player[0] + 8 &&
+      listFoods[key].x + 5 > player[0] - 8 &&
+      listFoods[key].y < player[1] + 8 &&
+      listFoods[key].y + 5 > player[1] - 8 ) {
+        listFoods.splice( key, 1 );
+        // self.foodToAdd++;
+        player.n++;
+        self.generatePath(player);
+      }
+    }
+	}
+
 	this.gameLoop = function() {
-		// if( self.socket != undefined && self.socket.SERVER.engineArray[1].exec.LoadAppByName('food') != undefined ) {
-		// 	self.socket.SERVER.engineArray[1].exec.LoadAppByName('food').exec.gameLoop();
-		// }
+		if( self.socket != undefined && self.socket.SERVER.engineArray[2].exec.LoadAppByName('food') != undefined ) {
+			self.socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec.gameLoop();
+		}
 	}
 }
 

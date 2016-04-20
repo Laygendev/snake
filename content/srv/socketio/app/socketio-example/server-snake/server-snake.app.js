@@ -72,29 +72,72 @@ function serverSnake()
     self.socket.SERVER.CLIENTS[socket.id].player.h = d.h;
 	}
 
-	this.sendUpdates = function() {
+	this.serverLoop = function() {
 		if(self.socket != undefined) {
+			self.sendUpdates();
 			if (self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake') != undefined)
 				self.socket.SERVER.engineArray[2].exec.LoadAppByName('snake').exec.moveLoop();
 
+			if (self.socket.SERVER.engineArray[2].exec.LoadAppByName('food') != undefined)
+				self.socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec.gameLoop();
+		}
+
+		setTimeout(self.serverLoop, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+	}
+
+	this.sendUpdates = function() {
+		if(self.socket != undefined) {
 			var size = Object.keys(self.socket.SERVER.CLIENTS).length;
 			if(self.socket.SERVER != undefined && self.socket.SERVER.CLIENTS != undefined && size > 0) {
-				var listUser = {};
-				for (var i in self.socket.SERVER.CLIENTS) {
-					listUser[i] = {
-						0: parseFloat(self.socket.SERVER.CLIENTS[i].player[0]).toFixed(2),
-						1: parseFloat(self.socket.SERVER.CLIENTS[i].player[1]).toFixed(2),
-						3: i,
-					}
-				}
 
-				listUser = JSON.stringify(listUser);
-				self.socket.IO[0].emit('6', listUser);
+				for (var i in self.socket.SERVER.CLIENTS) {
+					var listUser = {};
+					for (var y in self.socket.SERVER.CLIENTS) {
+						if (self.socket.SERVER.CLIENTS[y].player != undefined) {
+							listUser[y] = {
+								0: parseFloat(self.socket.SERVER.CLIENTS[y].player[0]).toFixed(2),
+								1: parseFloat(self.socket.SERVER.CLIENTS[y].player[1]).toFixed(2),
+								3: y,
+								4: [],
+							};
+
+							if(self.socket.SERVER.CLIENTS[y].player.ls!=undefined) {
+								for(var x in self.socket.SERVER.CLIENTS[y].player.ls) {
+									if ( self.socket.SERVER.CLIENTS[y].player.lp[self.socket.SERVER.CLIENTS[y].player.ls[x]][0] > self.socket.SERVER.CLIENTS[y].player[0] - self.socket.SERVER.CLIENTS[y].player.w/2 - 20 &&
+									 self.socket.SERVER.CLIENTS[y].player.lp[self.socket.SERVER.CLIENTS[y].player.ls[x]][0] < self.socket.SERVER.CLIENTS[y].player[0] + self.socket.SERVER.CLIENTS[y].player.w/2 + 20 &&
+									 self.socket.SERVER.CLIENTS[y].player.lp[self.socket.SERVER.CLIENTS[y].player.ls[x]][1] > self.socket.SERVER.CLIENTS[y].player[1] - self.socket.SERVER.CLIENTS[y].player.h/2 - 20 &&
+									 self.socket.SERVER.CLIENTS[y].player.lp[self.socket.SERVER.CLIENTS[y].player.ls[x]][1] < self.socket.SERVER.CLIENTS[y].player[1] + self.socket.SERVER.CLIENTS[y].player.h/2 + 20) {
+										 listUser[y][4].push( {
+											 	0: parseFloat(self.socket.SERVER.CLIENTS[y].player.lp[self.socket.SERVER.CLIENTS[y].player.ls[x]][0]).toFixed(2),
+										 		1: parseFloat(self.socket.SERVER.CLIENTS[y].player.lp[self.socket.SERVER.CLIENTS[y].player.ls[x]][1]).toFixed(2)
+											} );
+									 }
+								}
+							}
+						}
+					}
+
+					var listFoods = self.socket.SERVER.engineArray[2].exec.LoadAppByName('food') != undefined ? self.socket.SERVER.engineArray[2].exec.LoadAppByName('food').exec.getFoods() : [];
+					var visibleFoods = [];
+					if( self.socket.SERVER.CLIENTS[i].player != undefined ) {
+						for (var y in listFoods) {
+							if ( listFoods[y].x > self.socket.SERVER.CLIENTS[i].player[0] - self.socket.SERVER.CLIENTS[i].player.w/2 - 20 &&
+		            listFoods[y].x < self.socket.SERVER.CLIENTS[i].player[0] + self.socket.SERVER.CLIENTS[i].player.w/2 + 20 &&
+		            listFoods[y].y > self.socket.SERVER.CLIENTS[i].player[1] - self.socket.SERVER.CLIENTS[i].player.h/2 - 20 &&
+		            listFoods[y].y < self.socket.SERVER.CLIENTS[i].player[1] + self.socket.SERVER.CLIENTS[i].player.h/2 + 20) {
+									visibleFoods.push(listFoods[y]);
+							}
+						}
+					}
+					listFoods = JSON.stringify(visibleFoods);
+					listUser = JSON.stringify(listUser);
+					self.socket.SERVER.CLIENTS[i].emit('6', listUser, listFoods);
+				}
 			}
 		}
 
-		setTimeout(self.sendUpdates, 1000 / wf.CONF['SNAKE_CONF'].networkUpdateFactor);
+
 	}
 }
 
-module.exports.serverSnake.sendUpdates();
+module.exports.serverSnake.serverLoop();

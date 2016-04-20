@@ -12,11 +12,9 @@ function food()
 {
 	var self = this;
 	this.foods = [];
-	this.socket = undefined;
 	this.foodToAdd = 100;
 
 	this.code = function(socket) {
-		self.socket = socket;
 	}
 
 	this.getFoods = function() {
@@ -45,5 +43,4 @@ function food()
       self.addFood(self.foodToAdd);
     }
 	}
-
 }

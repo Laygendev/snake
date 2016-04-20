@@ -111,9 +111,13 @@ function setupSocket() {
     resize();
   });
 
-  socket.on('6', function (userData) {
+  socket.on('6', function (userData, listFoods) {
+		if(listFoods != undefined) {
+			foods = JSON.parse(listFoods);
+		}
 		if(userData != undefined) {
 	    userData = JSON.parse(userData);
+
 			users = [];
 	    for (var key in userData) {
 	      users[key] = userData[key];
